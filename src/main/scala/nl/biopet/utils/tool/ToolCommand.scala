@@ -21,7 +21,7 @@ import nl.biopet.utils.Logging
   */
 trait ToolCommand extends Logging {
 
-  def toolName: String = this.getClass.getSimpleName
+  def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
 
   def main(args: Array[String])
 }
