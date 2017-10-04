@@ -5,15 +5,19 @@ import org.scalatest.testng.TestNGSuite
 import org.testng.annotations.Test
 
 class ToolCommandTest extends TestNGSuite with Matchers {
+
+  object TestTool extends ToolCommand {
+    def main(args: Array[String]): Unit = {
+      count += 1
+    }
+    var count = 0
+  }
+
   @Test
   def test(): Unit = {
-    var a: Array[String] = Array()
-    val tool = new ToolCommand {
-      def main(args: Array[String]): Unit = {
-        a = args
-      }
-    }
-    tool.main(Array("test"))
-    a shouldBe Array("test")
+    TestTool.count shouldBe 0
+    TestTool.main(Array("test"))
+    TestTool.toolName shouldBe "TestTool"
+    TestTool.count shouldBe 1
   }
 }
