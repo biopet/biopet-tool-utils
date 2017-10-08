@@ -23,11 +23,11 @@ abstract class AbstractOptParser[T](cmdName: String)
   }
   opt[Unit]('h', "help") foreach { _ =>
     System.err.println(this.usage)
-    sys.exit(1)
+    sys.exit(0)
   } text "Print usage"
   opt[Unit]('v', "version") foreach { _ =>
     System.err.println("Version: " + utils.Version)
-    sys.exit(1)
+    sys.exit(0)
   } text "Print version"
   head(s"\n\nOptions for $cmdName\n")
 }
