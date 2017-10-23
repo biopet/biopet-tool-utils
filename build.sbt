@@ -1,14 +1,14 @@
 organization := "com.github.biopet"
-name := "biopet-tool-utils"
+name := "tool-utils"
 
 scalaVersion := "2.11.11"
 
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-libraryDependencies += "com.github.biopet" %% "biopet-common-utils" % "0.1-SNAPSHOT" changing()
+libraryDependencies += "com.github.biopet" %% "common-utils" % "0.1-SNAPSHOT" changing()
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.0"
 
-libraryDependencies += "com.github.biopet" %% "biopet-test-utils" % "0.1-SNAPSHOT" % Test changing()
+libraryDependencies += "com.github.biopet" %% "test-utils" % "0.1-SNAPSHOT" % Test changing()
 
 useGpg := true
 
