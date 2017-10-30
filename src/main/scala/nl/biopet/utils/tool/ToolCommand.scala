@@ -19,13 +19,13 @@ import nl.biopet.utils.Logging
 /**
   * Trait for biopet tools, sets some default args
   */
-trait ToolCommand extends Logging {
+trait ToolCommand[Args] extends Logging {
 
   def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
 
   def main(args: Array[String])
 
   /** This is the parser object that will be tested. */
-  def parser[T]: AbstractOptParser[T]
+  def parser: AbstractOptParser[Args]
 
 }
