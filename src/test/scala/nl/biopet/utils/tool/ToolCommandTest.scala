@@ -7,6 +7,11 @@ import org.testng.annotations.Test
 class ToolCommandTest extends TestNGSuite with Matchers {
 
   object TestTool extends ToolCommand {
+
+    case class Args()
+
+    def parser[Args]: AbstractOptParser[Args] = new AbstractOptParser[Args]("test") {}
+
     def main(args: Array[String]): Unit = {
       count += 1
     }
