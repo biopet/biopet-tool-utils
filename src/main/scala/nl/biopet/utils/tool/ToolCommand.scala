@@ -34,7 +34,7 @@ trait ToolCommand[Args] extends Logging {
   def emptyArgs: Args
 
   /** Converts args to a Args case class */
-  def cmdArgs(args: Array[String]): Args = {
+  def cmdArrayToArgs(args: Array[String]): Args = {
     argsParser.parse(args, emptyArgs).getOrElse(throw new IllegalArgumentException)
   }
 }

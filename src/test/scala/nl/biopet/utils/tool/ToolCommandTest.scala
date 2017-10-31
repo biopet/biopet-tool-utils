@@ -13,7 +13,7 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     var count = 0
 
     def main(args: Array[String]): Unit = {
-      val cmdArgs = this.cmdArgs(args)
+      val cmdArgs = cmdArrayToArgs(args)
 
       count = cmdArgs.num
     }
