@@ -21,11 +21,20 @@ import nl.biopet.utils.Logging
   */
 trait ToolCommand[Args] extends Logging {
 
+  /** This will return the name of the tool */
   def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
 
+  /** This is the main entry point of the tool */
   def main(args: Array[String])
 
   /** This is the parser object that will be tested. */
-  def parser: AbstractOptParser[Args]
+  def argsParser: AbstractOptParser[Args]
 
+  /** Returns an empty/default args case class */
+  def emptyArgs: Args
+
+  /** Converts args to a Args case class */
+  def cmdArgs(args: Array[String]): Args = {
+    argsParser.parse(args, emptyArgs).getOrElse(throw new IllegalArgumentException)
+  }
 }

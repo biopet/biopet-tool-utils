@@ -6,24 +6,34 @@ import org.testng.annotations.Test
 
 class ToolCommandTest extends TestNGSuite with Matchers {
 
-  case class Args()
+  case class TestArgs(num: Int = 1)
 
-  object TestTool extends ToolCommand[Args] {
+  object TestTool extends ToolCommand[TestArgs] {
 
-
-    def parser: AbstractOptParser[Args] = new AbstractOptParser[Args]("test") {}
+    var count = 0
 
     def main(args: Array[String]): Unit = {
-      count += 1
+      val cmdArgs = this.cmdArgs(args)
+
+      count = cmdArgs.num
     }
-    var count = 0
+
+    /** This is the parser object that will be tested. */
+    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs]("test") {
+      opt[Int]('n', "num") action { (a,b) => b.copy(num = a)}
+    }
+
+    /** Returns an empty/default args case class */
+    def emptyArgs: TestArgs = TestArgs()
   }
 
   @Test
   def test(): Unit = {
     TestTool.count shouldBe 0
-    TestTool.main(Array("test"))
+    TestTool.main(Array())
     TestTool.toolName shouldBe "TestTool"
     TestTool.count shouldBe 1
+    TestTool.main(Array("-n", "11"))
+    TestTool.count shouldBe 11
   }
 }
