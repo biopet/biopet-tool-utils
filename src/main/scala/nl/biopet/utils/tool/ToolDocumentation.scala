@@ -93,6 +93,7 @@ trait ToolDocumentation {
           System.lineSeparator()
       )
     }
+    fileWriter.close()
   }
 
   /**
