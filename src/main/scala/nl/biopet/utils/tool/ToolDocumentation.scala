@@ -3,7 +3,6 @@ package nl.biopet.utils.tool
 import java.io.{File, PrintWriter}
 
 import scala.io.Source
-import scala.collection.mutable.ListBuffer
 
 trait ToolDocumentation {
   /** This will return the name of the tool */
@@ -62,6 +61,7 @@ trait ToolDocumentation {
       |```
     """.stripMargin
 
+  // Which chapters should be in the README
   def readmeContents: List[(String,String)] = {
     List(
       (s"# ${toolName}",descriptionText),
@@ -73,7 +73,7 @@ trait ToolDocumentation {
   }
 
   /**
-    *
+    * Generates a Markdown file from a list of chapters (heading, content) tuples.
     * @param contents A list of (string, string) tuples, where the first string is the title and the other the content.
     * @param outputFilename The output filename to which the markdown file is written.
     */
@@ -94,6 +94,12 @@ trait ToolDocumentation {
       )
     }
   }
+
+  /**
+    * Converts a resource to a file
+    * @param resource Which resource
+    * @param output Filename for the output file
+    */
   def resourceToFile(resource: String, output: String): Unit = {
     val outputFile = new File(output)
     outputFile.getParentFile.mkdirs()
@@ -105,11 +111,22 @@ trait ToolDocumentation {
     lines.foreach(line => printWriter.println(line))
     printWriter.close()
   }
+
+  /**
+    * Generates the README
+    * @param filename The readme filename
+    */
   def generateReadme(filename: String): Unit = {
     contentsToMarkdown(readmeContents,filename)
   }
 
-   def generateDocumentation(docsDir: String): Unit = {
+  /**
+    * Outputs markdown documentation for LAIKA processing.
+    * @param docsDir outputs the Markdown documentation in this directory
+    */
+  def generateDocumentation(docsDir: String): Unit = {
+    val outputDirectory= new File(docsDir)
+    outputDirectory.mkdirs()
     val mainPageContents: List[(String,String)] = {
       List(
         (s"# ${toolName}",descriptionText),
@@ -121,14 +138,13 @@ trait ToolDocumentation {
         ("# Contact", contactText)
       )
     }
-    val outputDirectory= new File(docsDir)
-    outputDirectory.mkdirs()
+
     contentsToMarkdown(mainPageContents, docsDir + "/index.md")
     resourceToFile("/default.template.html", docsDir + "default.template.html")
     resourceToFile("/bootstrap.css", docsDir + "/css/bootstrap.css")
     resourceToFile("/docs.css", docsDir + "/css/docs.css")
 
-    val printWriter = new PrintWriter(new File(docsDir + "directory.conf"))
+    val configFile = new PrintWriter(new File(docsDir + "directory.conf"))
     val navigationOrder = List(
       "index.md",
     ).mkString("\n")
@@ -140,7 +156,7 @@ trait ToolDocumentation {
         "navigationOrder = [" + System.lineSeparator() +
         navigationOrder + System.lineSeparator() + "]"
     }
-    printWriter.write(config)
-    printWriter.close()
+    configFile.write(config)
+    configFile.close()
   }
 }
