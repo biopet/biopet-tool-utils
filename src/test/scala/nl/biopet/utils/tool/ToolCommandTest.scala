@@ -57,16 +57,28 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
     val index = scala.io.Source.fromFile(outputDir + "index.md")
     val lines = try index.mkString finally index.close()
-    lines should include ("--num")
-    lines should include ("For any question related to this tool")
-    lines should include ("This tool requires Java")
-    lines should include ("This tool is part of BIOPET")
-    lines should include ("# Contact")
-    lines should include ("# Manual")
-    lines should include ("# TestTool")
-    lines should include ("This is just a test")
-    lines should include ("comes without a manual.")
-    lines should include ("for example: a test.")
+    lines should include("--num")
+    lines should include("For any question related to this tool")
+    lines should include("This tool requires Java")
+    lines should include("This tool is part of BIOPET")
+    lines should include("# Contact")
+    lines should include("# Manual")
+    lines should include("# TestTool")
+    lines should include("This is just a test")
+    lines should include("comes without a manual.")
+    lines should include("for example: a test.")
+  }
+  @Test
+  def testReadme(): Unit = {
+    val readmeLocation = "target/test/readme/README.md"
+    TestTool.generateReadme(readmeLocation)
+    val readme = scala.io.Source.fromFile(readmeLocation)
+    val lines = try readme.mkString finally readme.close()
+
+    lines should include("https://biopet.github.io/TestTool")
+    lines should include("# Documentation")
+    lines should include("This tool is part of BIOPET")
+    lines should include("For any question related to this tool")
   }
 }
 
