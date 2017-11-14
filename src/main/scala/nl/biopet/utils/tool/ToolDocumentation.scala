@@ -1,5 +1,10 @@
 package nl.biopet.utils.tool
 
+import java.io.{File, PrintWriter}
+
+import scala.io.Source
+import scala.collection.mutable.ListBuffer
+
 trait ToolDocumentation {
   /** This will return the name of the tool */
   def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
@@ -12,6 +17,9 @@ trait ToolDocumentation {
 
   // Force an example to be written for each tool
   def exampleText: String
+
+  // Force a usage text to be generated for each tool.
+  def usageText: String
 
   // Universal text for pointing to the documentation.
   // TODO: Change link.
@@ -56,17 +64,83 @@ trait ToolDocumentation {
 
   def readmeContents: List[(String,String)] = {
     List(
-      (s"$toolName",descriptionText),
-      ("Documentation", documentationText),
-      ("About", aboutText),
-      ("Contact", contactText)
+      (s"# ${toolName}",descriptionText),
+      ("# Documentation", documentationText),
+      ("# About", aboutText),
+      ("# Contact", contactText)
 
     )
   }
 
-  def contentsToMarkdown(contents: List[(String, String)]
-                   ): Unit
+  /**
+    *
+    * @param contents A list of (string, string) tuples, where the first string is the title and the other the content.
+    * @param outputFilename The output filename to which the markdown file is written.
+    */
+  def contentsToMarkdown(
+                        contents: List[(String, String)],
+                        outputFilename: String
+                   ): Unit = {
+    val outputFile = new File(outputFilename)
+    outputFile.getParentFile.mkdirs()
+    outputFile.createNewFile()
+    val fileWriter = new PrintWriter(outputFile)
+    for (entry <- contents){
+      fileWriter.write(
+        entry._1 + System.lineSeparator() +
+          System.lineSeparator() +
+        entry._2 + System.lineSeparator() +
+          System.lineSeparator()
+      )
+    }
+  }
+  def resourceToFile(resource: String, output: String): Unit = {
+    val outputFile = new File(output)
+    outputFile.getParentFile.mkdirs()
+    outputFile.createNewFile()
+    val printWriter = new PrintWriter(outputFile)
 
-  def generateReadme: Unit
-  def generateDocumentation: Unit
+    val source = getClass.getResourceAsStream(resource)
+    val lines: Iterator[String] = Source.fromInputStream(source).getLines
+    lines.foreach(line => printWriter.println(line))
+    printWriter.close()
+  }
+  def generateReadme(filename: String): Unit = {
+    contentsToMarkdown(readmeContents,filename)
+  }
+
+   def generateDocumentation(docsDir: String): Unit = {
+    val mainPageContents: List[(String,String)] = {
+      List(
+        (s"# ${toolName}",descriptionText),
+        ("# Installation", installationText),
+        ("# Manual", manualText),
+        ("## Example", exampleText),
+        ("## Usage", usageText),
+        ("# About", aboutText),
+        ("# Contact", contactText)
+      )
+    }
+    val outputDirectory= new File(docsDir)
+    outputDirectory.mkdirs()
+    contentsToMarkdown(mainPageContents, docsDir + "/index.md")
+    resourceToFile("/default.template.html", docsDir + "default.template.html")
+    resourceToFile("/bootstrap.css", docsDir + "/css/bootstrap.css")
+    resourceToFile("/docs.css", docsDir + "/css/docs.css")
+
+    val printWriter = new PrintWriter(new File(docsDir + "directory.conf"))
+    val navigationOrder = List(
+      "index.md",
+    ).mkString("\n")
+
+    val config: String = {
+      s"""title = "${toolName}"
+          |
+          """.stripMargin + System.lineSeparator() +
+        "navigationOrder = [" + System.lineSeparator() +
+        navigationOrder + System.lineSeparator() + "]"
+    }
+    printWriter.write(config)
+    printWriter.close()
+  }
 }

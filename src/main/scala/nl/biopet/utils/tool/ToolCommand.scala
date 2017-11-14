@@ -36,4 +36,6 @@ trait ToolCommand[Args] extends Logging with ToolDocumentation {
       .parse(args, emptyArgs)
       .getOrElse(throw new IllegalArgumentException)
   }
+
+  def usageText: String = argsParser.usage
 }
