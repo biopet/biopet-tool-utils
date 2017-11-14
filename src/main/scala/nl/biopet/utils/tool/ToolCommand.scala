@@ -19,10 +19,7 @@ import nl.biopet.utils.Logging
 /**
   * Trait for biopet tools, sets some default args
   */
-trait ToolCommand[Args] extends Logging {
-
-  /** This will return the name of the tool */
-  def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
+trait ToolCommand[Args] extends Logging with ToolDocumentation {
 
   /** This is the main entry point of the tool */
   def main(args: Array[String])
