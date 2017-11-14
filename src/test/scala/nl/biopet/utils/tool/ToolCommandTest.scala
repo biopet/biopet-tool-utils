@@ -10,6 +10,10 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
   object TestTool extends ToolCommand[TestArgs] {
 
+    def descriptionText: String = "This is just a test"
+    def manualText: String = "This test tool comes without a manual."
+    def exampleText: String = "You could use this tool in for example: a test."
+
     var count = 0
 
     def main(args: Array[String]): Unit = {
@@ -25,6 +29,8 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
     /** Returns an empty/default args case class */
     def emptyArgs: TestArgs = TestArgs()
+
+
   }
 
   @Test

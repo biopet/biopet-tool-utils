@@ -146,7 +146,7 @@ trait ToolDocumentation {
 
     val configFile = new PrintWriter(new File(docsDir + "directory.conf"))
     val navigationOrder = List(
-      "index.md",
+      "index.md"
     ).mkString("\n")
 
     val config: String = {
