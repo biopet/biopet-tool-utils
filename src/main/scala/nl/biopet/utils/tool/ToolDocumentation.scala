@@ -22,7 +22,7 @@ trait ToolDocumentation {
 
   // Universal text for pointing to the documentation.
   // TODO: Change link.
-  def documentationText: String = s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${toolName})"
+  def documentationText: String = s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${toolName})."
 
   // Universal contact text
   def contactText: String =
@@ -56,9 +56,9 @@ trait ToolDocumentation {
       |
       |Download the latest version of ${toolName} [here](https://github.com/biopet/${toolName}/releases/).
       |To generate the usage run:
-      |```bash
-      |java -jar ${toolName}-version.jar --help
-      |```
+      |
+      |    java -jar ${toolName}-version.jar --help
+      |
     """.stripMargin
 
   // Which chapters should be in the README

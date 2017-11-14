@@ -37,5 +37,11 @@ trait ToolCommand[Args] extends Logging with ToolDocumentation {
       .getOrElse(throw new IllegalArgumentException)
   }
 
-  def usageText: String = argsParser.usage
+  def usageText: String = {
+    // Prepend code block with four spaces in concordance with Markdown specification.
+    val usage = new StringBuffer()
+    val usageLines: Array[String] = argsParser.usage.split("\n")
+    usageLines.foreach(line => usage.append("    " + line + System.lineSeparator()))
+    usage.toString
+  }
 }
