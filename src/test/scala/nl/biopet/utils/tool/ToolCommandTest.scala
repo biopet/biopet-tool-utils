@@ -57,15 +57,16 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
     val index = scala.io.Source.fromFile(outputDir + "index.md")
     val lines = try index.mkString finally index.close()
-    lines should contain ("--num")
-    lines should contain ("For any question related to this tool")
-    lines should contain ("This tool requires java")
-    lines should contain ("This tool is part of BIOPET")
-    lines should contain ("# Contact")
-    lines should contain ("# Manual")
-    lines should contain ("This is just a test")
-    lines should contain ("comes without a manual.")
-    lines should contain ("for example: a test.")
+    lines should include ("--num")
+    lines should include ("For any question related to this tool")
+    lines should include ("This tool requires Java")
+    lines should include ("This tool is part of BIOPET")
+    lines should include ("# Contact")
+    lines should include ("# Manual")
+    lines should include ("# TestTool")
+    lines should include ("This is just a test")
+    lines should include ("comes without a manual.")
+    lines should include ("for example: a test.")
   }
 }
 
