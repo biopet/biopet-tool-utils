@@ -22,7 +22,7 @@ trait ToolDocumentation {
 
   // Universal text for pointing to the documentation.
   // TODO: Change link.
-  def documentationText: String = s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${toolName}"
+  def documentationText: String = s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${toolName})"
 
   // Universal contact text
   def contactText: String =
