@@ -206,7 +206,7 @@ trait ToolCommand[Args] extends Logging {
   /**
     * Generates a Markdown file from a list of chapters (heading, content) tuples.
     * @param contents A list of (string, string) tuples, where the first string is the title and the other the content.
-    * @param outputFile The output filename to which the markdown file is written.
+    * @param outputFile The output file to which the markdown file is written.
     */
   def contentsToMarkdown(
       contents: List[(String, String)],
@@ -226,7 +226,7 @@ trait ToolCommand[Args] extends Logging {
   /**
     * Converts a resource to a file
     * @param resource Which resource
-    * @param outputFile Filename for the output file
+    * @param outputFile The output file
     */
   def resourceToFile(resource: String, outputFile: File): Unit = {
     val source = getClass.getResourceAsStream(resource)

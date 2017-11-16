@@ -28,9 +28,7 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs]("test") {
       opt[Int]('n', "num") action { (a, b) => b.copy(num = a) }
       opt[Unit]('x', "longX") required()
-      opt[Unit]("power")
-        .unbounded()
-        .text("Palpatine's requested feature")
+      opt[Unit]("power") unbounded() text "Palpatine's requested feature"
       opt[Unit]("sith") minOccurs 2 maxOccurs 2 text "There are always 2"
     }
 
