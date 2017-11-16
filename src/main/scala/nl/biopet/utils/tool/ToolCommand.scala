@@ -61,8 +61,8 @@ trait ToolCommand[Args] extends Logging {
         // Do not show usage if option is hidden.
         if (!option.isHidden) {
           val shortOpt: String =
-            if (option.shortOpt != None) "-" + option.shortOpt.get else ""
-          val optSeperator: String = if (option.shortOpt != None) ", " else ""
+            if (option.shortOpt.isDefined) "-" + option.shortOpt.get else ""
+          val optSeperator: String = if (option.shortOpt.isDefined) ", " else ""
           val name: String = option.fullName + optSeperator + shortOpt
           val description: String = option.desc
 
@@ -83,7 +83,7 @@ trait ToolCommand[Args] extends Logging {
       }
       body.toList
     }
-    s"Usage for ${toolName}:\n" + htmlTable(headers, body)
+    s"Usage for $toolName:\n" + htmlTable(headers, body)
   }
 
   /**
@@ -127,9 +127,8 @@ trait ToolCommand[Args] extends Logging {
   def exampleText: String
 
   /** Universal text for pointing to the documentation.*/
-  // TODO: Change link.
   def documentationText: String =
-    s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${urlToolName})."
+    s"For documentation and manuals visit our [github.io page](https://biopet.github.io/$urlToolName)."
 
   /** Universal contact text */
   def contactText: String =
@@ -137,7 +136,7 @@ trait ToolCommand[Args] extends Logging {
        |<p>
        |  <!-- Obscure e-mail address for spammers -->
        |For any question related to this tool, please use the
-       |<a href='https://github.com/biopet/${urlToolName}/issues'>github issue tracker</a>
+       |<a href='https://github.com/biopet/$urlToolName/issues'>github issue tracker</a>
        |or contact
        |  <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;
        | &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
@@ -161,17 +160,17 @@ trait ToolCommand[Args] extends Logging {
        |[here](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
        |or install via your distribution's package manager.
        |
-       |Download the latest version of ${toolName} [here](https://github.com/biopet/${urlToolName}/releases/).
+       |Download the latest version of $toolName [here](https://github.com/biopet/$urlToolName/releases/).
        |To generate the usage run:
        |
-       |    java -jar ${toolName}-version.jar --help
+       |    java -jar $toolName --version.jar --help
        |
     """.stripMargin
 
   /** Which chapters should be in the README */
   def readmeContents: List[(String, String)] = {
     List(
-      (s"# ${toolName}", descriptionText),
+      (s"# $toolName", descriptionText),
       ("# Documentation", documentationText),
       ("# About", aboutText),
       ("# Contact", contactText)
@@ -229,7 +228,7 @@ trait ToolCommand[Args] extends Logging {
     outputDirectory.mkdirs()
     val mainPageContents: List[(String, String)] = {
       List(
-        (s"# ${toolName}", descriptionText),
+        (s"# $toolName", descriptionText),
         ("# Installation", installationText),
         ("# Manual", manualText),
         ("## Example", exampleText),
@@ -251,7 +250,7 @@ trait ToolCommand[Args] extends Logging {
     ).mkString("\n")
 
     val config: String = {
-      s"""title = "${toolName}"
+      s"""title = "$toolName"
          |
           """.stripMargin + System.lineSeparator() +
         "navigationOrder = [" + System.lineSeparator() +
