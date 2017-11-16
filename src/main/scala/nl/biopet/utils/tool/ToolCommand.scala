@@ -96,7 +96,7 @@ trait ToolCommand[Args] extends Logging {
   def htmlTable(headers: List[String], body: List[List[String]]): String = {
 
     // Validate that all rows have a length equal to the header
-    body.foreach(row => assert(row.length == headers.length))
+    body.foreach(row => require(row.length == headers.length, "Number of items in each row should be equal number of items in header."))
 
     val table = new StringBuffer()
 
@@ -239,10 +239,10 @@ trait ToolCommand[Args] extends Logging {
     }
 
     contentsToMarkdown(mainPageContents, new File(docsDir + "/index.md"))
-    resourceToFile("/default.template.html",
+    resourceToFile("/nl/biopet/utils/tool/default.template.html",
                    new File(docsDir + "default.template.html"))
-    resourceToFile("/bootstrap.css", new File(docsDir + "/css/bootstrap.css"))
-    resourceToFile("/docs.css", new File(docsDir + "/css/docs.css"))
+    resourceToFile("/nl/biopet/utils/tool/bootstrap.css", new File(docsDir + "/css/bootstrap.css"))
+    resourceToFile("/nl/biopet/utils/tool/docs.css", new File(docsDir + "/css/docs.css"))
 
     val configFile = new PrintWriter(new File(docsDir + "directory.conf"))
     val navigationOrder = List(
