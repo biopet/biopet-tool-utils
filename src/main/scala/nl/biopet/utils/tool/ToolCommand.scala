@@ -29,7 +29,6 @@ trait ToolCommand[Args] extends Logging {
   def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
 
   /** This is the tool name to be used in URL. Can be overwritten. */
-
   def urlToolName: String = toolName.toLowerCase()
 
   /** This is the main entry point of the tool */
@@ -48,14 +47,27 @@ trait ToolCommand[Args] extends Logging {
       .getOrElse(throw new IllegalArgumentException)
   }
 
+  /** Creates a usage and prepends code block with four spaces in concordance with Markdown specification. */
   def usageText: String = {
 
-    /** Prepend code block with four spaces in concordance with Markdown specification. */
+    // Generate usage
     val usage = new StringBuffer()
-    val usageLines: Array[String] = argsParser.usage.split("\n")
-    usageLines.foreach(line =>
-      usage.append("    " + line + System.lineSeparator()))
-    usage.toString
+    usage.append(s"options for ${toolName}:\n\n")
+    for (option <- argsParser.optionsForRender) {
+      val shortOpt: String = option.shortOpt.getOrElse("")
+      val optSeperator: String = if (option.shortOpt != None) ", " else ""
+      val name: String = option.fullName
+      val description: String = option.desc
+      val optionUsage
+        : String = name + optSeperator + shortOpt + "\t\t" + description + "\n"
+      usage.append(optionUsage)
+    }
+
+    // Format the usage for markdown.
+    val markdownFormattedUsage = new StringBuffer()
+    val usageLines: Array[String] = usage.toString.split("\n")
+    usageLines.foreach(line => usage.append("    " + line + "\n"))
+    markdownFormattedUsage.toString
   }
 
   /** Force description to be written for each tool. */
@@ -102,10 +114,10 @@ trait ToolCommand[Args] extends Logging {
        |[here](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
        |or install via your distribution's package manager.
        |
-      |Download the latest version of ${toolName} [here](https://github.com/biopet/${urlToolName}/releases/).
+       |Download the latest version of ${toolName} [here](https://github.com/biopet/${urlToolName}/releases/).
        |To generate the usage run:
        |
-      |    java -jar ${toolName}-version.jar --help
+       |    java -jar ${toolName}-version.jar --help
        |
     """.stripMargin
 
@@ -181,7 +193,8 @@ trait ToolCommand[Args] extends Logging {
     }
 
     contentsToMarkdown(mainPageContents, new File(docsDir + "/index.md"))
-    resourceToFile("/default.template.html", new File(docsDir + "default.template.html"))
+    resourceToFile("/default.template.html",
+                   new File(docsDir + "default.template.html"))
     resourceToFile("/bootstrap.css", new File(docsDir + "/css/bootstrap.css"))
     resourceToFile("/docs.css", new File(docsDir + "/css/docs.css"))
 
