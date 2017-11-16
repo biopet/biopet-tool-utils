@@ -56,17 +56,16 @@ trait ToolCommand[Args] extends Logging {
     for (option <- argsParser.optionsForRender) {
       val shortOpt: String = option.shortOpt.getOrElse("")
       val optSeperator: String = if (option.shortOpt != None) ", " else ""
-      val name: String = option.fullName
+      val name: String = option.fullName + optSeperator + shortOpt
       val description: String = option.desc
-      val optionUsage
-        : String = name + optSeperator + shortOpt + "\t\t" + description + "\n"
+      val optionUsage: String =  f"$name%-35s" + description + "\n"
       usage.append(optionUsage)
     }
 
     // Format the usage for markdown.
     val markdownFormattedUsage = new StringBuffer()
     val usageLines: Array[String] = usage.toString.split("\n")
-    usageLines.foreach(line => usage.append("    " + line + "\n"))
+    usageLines.foreach(line => markdownFormattedUsage.append("    " + line + "\n"))
     markdownFormattedUsage.toString
   }
 
