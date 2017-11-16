@@ -52,7 +52,8 @@ trait ToolCommand[Args] extends Logging {
   def usageText: String = {
 
     // Generate usage table by defining body and headers.
-    val headers: List[String] = List("Option", "Required", "Can occur multiple times", "Description")
+    val headers: List[String] =
+      List("Option", "Required", "Can occur multiple times", "Description")
 
     def body: List[List[String]] = {
       val body = new ListBuffer[List[String]]
@@ -62,7 +63,8 @@ trait ToolCommand[Args] extends Logging {
         if (!option.isHidden) {
           val shortOpt: String =
             if (option.shortOpt.isDefined) "-" + option.shortOpt.get else ""
-          val optSeperator: String = if (option.shortOpt.isDefined) ", " else ""
+          val optSeperator: String =
+            if (option.shortOpt.isDefined) ", " else ""
           val name: String = option.fullName + optSeperator + shortOpt
           val description: String = option.desc
 
@@ -77,7 +79,8 @@ trait ToolCommand[Args] extends Logging {
             case Int.MaxValue => s"yes (unlimited)"
             case number => s"yes ($number times)"
           }
-          val tableRow: List[String] = List(name, required, occurances, description)
+          val tableRow: List[String] =
+            List(name, required, occurances, description)
           body.append(tableRow)
         }
       }
@@ -96,7 +99,11 @@ trait ToolCommand[Args] extends Logging {
   def htmlTable(headers: List[String], body: List[List[String]]): String = {
 
     // Validate that all rows have a length equal to the header
-    body.foreach(row => require(row.length == headers.length, "Number of items in each row should be equal number of items in header."))
+    body.foreach(
+      row =>
+        require(
+          row.length == headers.length,
+          "Number of items in each row should be equal number of items in header."))
 
     val table = new StringBuffer()
 
@@ -237,13 +244,17 @@ trait ToolCommand[Args] extends Logging {
       )
     }
 
-    contentsToMarkdown(mainPageContents, new File(outputDirectory + "/index.md"))
+    contentsToMarkdown(mainPageContents,
+                       new File(outputDirectory + "/index.md"))
     resourceToFile("/nl/biopet/utils/tool/default.template.html",
                    new File(outputDirectory + "/default.template.html"))
-    resourceToFile("/nl/biopet/utils/tool/bootstrap.css", new File(outputDirectory + "/css/bootstrap.css"))
-    resourceToFile("/nl/biopet/utils/tool/docs.css", new File(outputDirectory + "/css/docs.css"))
+    resourceToFile("/nl/biopet/utils/tool/bootstrap.css",
+                   new File(outputDirectory + "/css/bootstrap.css"))
+    resourceToFile("/nl/biopet/utils/tool/docs.css",
+                   new File(outputDirectory + "/css/docs.css"))
 
-    val configFile = new PrintWriter(new File(outputDirectory + "/directory.conf"))
+    val configFile = new PrintWriter(
+      new File(outputDirectory + "/directory.conf"))
     val navigationOrder = List(
       "index.md"
     ).mkString("\n")
