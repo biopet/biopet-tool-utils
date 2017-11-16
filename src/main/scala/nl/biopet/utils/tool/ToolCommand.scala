@@ -52,7 +52,7 @@ trait ToolCommand[Args] extends Logging {
   def usageText: String = {
 
     // Generate usage table by defining body and headers.
-    val headers: List[String] = List("Option", "Required", "Description")
+    val headers: List[String] = List("Option", "Required", "Can occur multiple times", "Description")
 
     def body: List[List[String]] = {
       val body = new ListBuffer[List[String]]
@@ -60,19 +60,30 @@ trait ToolCommand[Args] extends Logging {
       for (option <- argsParser.optionsForRender) {
         // Do not show usage if option is hidden.
         if (!option.isHidden) {
-          val shortOpt: String = if (option.shortOpt != None) "-" + option.shortOpt.get else ""
+          val shortOpt: String =
+            if (option.shortOpt != None) "-" + option.shortOpt.get else ""
           val optSeperator: String = if (option.shortOpt != None) ", " else ""
           val name: String = option.fullName + optSeperator + shortOpt
           val description: String = option.desc
-          val required: String = if (option.getMinOccurs >= 1) "yes" else "no"
 
-          val tableRow: List[String] = List(name, required, description)
+          val required: String = option.getMinOccurs match {
+            case 1 => "yes"
+            case 0 => "no"
+            case number => s"yes ($number required)"
+          }
+
+          val occurances: String = option.getMaxOccurs match {
+            case 1 => "no"
+            case Int.MaxValue => s"yes (unlimited)"
+            case number => s"yes ($number times)"
+          }
+          val tableRow: List[String] = List(name, required, occurances, description)
           body.append(tableRow)
         }
       }
       body.toList
     }
-    s"Usage for ${toolName}:\n" + htmlTable(headers,body)
+    s"Usage for ${toolName}:\n" + htmlTable(headers, body)
   }
 
   /**
@@ -85,19 +96,25 @@ trait ToolCommand[Args] extends Logging {
   def htmlTable(headers: List[String], body: List[List[String]]): String = {
 
     // Validate that all rows have a length equal to the header
-    body.foreach(row => assert(row.length == headers.length) )
+    body.foreach(row => assert(row.length == headers.length))
 
     val table = new StringBuffer()
 
     table.append("<table>\n")
-    table.append(headers.mkString("\t<thead>\n\t\t<tr>\n\t\t\t<th>", "</th>\n\t\t\t<th>","</th>\n\t\t</tr>\n\t</thead>\n"))
+    table.append(
+      headers.mkString("\t<thead>\n\t\t<tr>\n\t\t\t<th>",
+                       "</th>\n\t\t\t<th>",
+                       "</th>\n\t\t</tr>\n\t</thead>\n"))
     table.append("\t<tbody>\n")
     for (row <- body) {
-      table.append(row.mkString("\t\t<tr>\n\t\t\t<td>", "</td>\n\t\t\t<td>","</td>\n\t\t</tr>\n"))
+      table.append(
+        row.mkString("\t\t<tr>\n\t\t\t<td>",
+                     "</td>\n\t\t\t<td>",
+                     "</td>\n\t\t</tr>\n"))
     }
     table.append("\t</tbody>\n")
     table.append("</table>\n")
-    table.toString.replace("\t","  ")
+    table.toString.replace("\t", "  ")
   }
 
   /** Force description to be written for each tool. */

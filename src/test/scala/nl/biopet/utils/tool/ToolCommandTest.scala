@@ -27,6 +27,9 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     /** This is the parser object that will be tested. */
     def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs]("test") {
       opt[Int]('n', "num") action { (a, b) => b.copy(num = a) }
+      opt[Unit]('x', "longX") required()
+      opt[Unit]("power") unbounded() text("Palpatine's requested feature")
+      opt[Unit]("sith") minOccurs(2) maxOccurs(2) text("There are always 2")
     }
 
     /** Returns an empty/default args case class */
@@ -38,10 +41,10 @@ class ToolCommandTest extends TestNGSuite with Matchers {
   @Test
   def test(): Unit = {
     TestTool.count shouldBe 0
-    TestTool.main(Array())
+    TestTool.main(Array("-x","--sith", "--sith"))
     TestTool.toolName shouldBe "TestTool"
     TestTool.count shouldBe 1
-    TestTool.main(Array("-n", "11"))
+    TestTool.main(Array("--sith", "--sith", "-n", "11", "-x"))
     TestTool.count shouldBe 11
   }
 
@@ -67,6 +70,11 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("This is just a test")
     lines should include("comes without a manual.")
     lines should include("for example: a test.")
+    lines should include("<td>yes</td>")
+    lines should include("<td>no</td>")
+    lines should include("<td>yes (2 required)</td>")
+    lines should include("<td>yes (unlimited)</td>")
+    lines should include("<td>yes (2 times)</td>")
   }
   @Test
   def testReadme(): Unit = {
