@@ -16,7 +16,7 @@ package nl.biopet.utils.tool
 
 import java.io.{File, PrintWriter}
 
-import nl.biopet.utils.Logging
+import nl.biopet.utils.{IoUtils, Logging}
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
@@ -229,12 +229,8 @@ trait ToolCommand[Args] extends Logging {
     * @param outputFile Filename for the output file
     */
   def resourceToFile(resource: String, outputFile: File): Unit = {
-    outputFile.getParentFile.mkdirs()
-    val printWriter = new PrintWriter(outputFile)
     val source = getClass.getResourceAsStream(resource)
-    val lines: Iterator[String] = Source.fromInputStream(source).getLines
-    lines.foreach(line => printWriter.println(line))
-    printWriter.close()
+    IoUtils.copyStreamToFile(source, outputFile, createDirs = true)
   }
 
   /**
