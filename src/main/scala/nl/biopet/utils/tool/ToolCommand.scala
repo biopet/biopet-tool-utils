@@ -24,8 +24,11 @@ import scala.io.Source
   * Trait for biopet tools, sets some default args
   */
 trait ToolCommand[Args] extends Logging {
+
   /** This will return the name of the tool */
   def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
+
+  /** This is the tool name to be used in URL. Can be overwritten. */
 
   def urlToolName: String = toolName.toLowerCase()
 
@@ -46,10 +49,12 @@ trait ToolCommand[Args] extends Logging {
   }
 
   def usageText: String = {
+
     /** Prepend code block with four spaces in concordance with Markdown specification. */
     val usage = new StringBuffer()
     val usageLines: Array[String] = argsParser.usage.split("\n")
-    usageLines.foreach(line => usage.append("    " + line + System.lineSeparator()))
+    usageLines.foreach(line =>
+      usage.append("    " + line + System.lineSeparator()))
     usage.toString
   }
 
@@ -64,7 +69,8 @@ trait ToolCommand[Args] extends Logging {
 
   /** Universal text for pointing to the documentation.*/
   // TODO: Change link.
-  def documentationText: String = s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${urlToolName})."
+  def documentationText: String =
+    s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${urlToolName})."
 
   /** Universal contact text */
   def contactText: String =
@@ -104,36 +110,31 @@ trait ToolCommand[Args] extends Logging {
     """.stripMargin
 
   /** Which chapters should be in the README */
-  def readmeContents: List[(String,String)] = {
+  def readmeContents: List[(String, String)] = {
     List(
-      (s"# ${toolName}",descriptionText),
+      (s"# ${toolName}", descriptionText),
       ("# Documentation", documentationText),
       ("# About", aboutText),
       ("# Contact", contactText)
-
     )
   }
 
   /**
     * Generates a Markdown file from a list of chapters (heading, content) tuples.
     * @param contents A list of (string, string) tuples, where the first string is the title and the other the content.
-    * @param outputFilename The output filename to which the markdown file is written.
+    * @param outputFile The output filename to which the markdown file is written.
     */
   def contentsToMarkdown(
-                          contents: List[(String, String)],
-                          outputFilename: String
-                        ): Unit = {
-    val outputFile = new File(outputFilename)
+      contents: List[(String, String)],
+      outputFile: File
+  ): Unit = {
     outputFile.getParentFile.mkdirs()
-    outputFile.createNewFile()
     val fileWriter = new PrintWriter(outputFile)
-    for (entry <- contents){
-      fileWriter.write(
-        entry._1 + System.lineSeparator() +
-          System.lineSeparator() +
-          entry._2 + System.lineSeparator() +
-          System.lineSeparator()
-      )
+    for ((head, content) <- contents) {
+      fileWriter.println(head)
+      fileWriter.println()
+      fileWriter.println(content)
+      fileWriter.println()
     }
     fileWriter.close()
   }
@@ -141,14 +142,11 @@ trait ToolCommand[Args] extends Logging {
   /**
     * Converts a resource to a file
     * @param resource Which resource
-    * @param output Filename for the output file
+    * @param outputFile Filename for the output file
     */
-  def resourceToFile(resource: String, output: String): Unit = {
-    val outputFile = new File(output)
+  def resourceToFile(resource: String, outputFile: File): Unit = {
     outputFile.getParentFile.mkdirs()
-    outputFile.createNewFile()
     val printWriter = new PrintWriter(outputFile)
-
     val source = getClass.getResourceAsStream(resource)
     val lines: Iterator[String] = Source.fromInputStream(source).getLines
     lines.foreach(line => printWriter.println(line))
@@ -157,10 +155,10 @@ trait ToolCommand[Args] extends Logging {
 
   /**
     * Generates the README
-    * @param filename The readme filename
+    * @param outputFile The readme file
     */
-  def generateReadme(filename: String): Unit = {
-    contentsToMarkdown(readmeContents,filename)
+  def generateReadme(outputFile: File): Unit = {
+    contentsToMarkdown(readmeContents, outputFile)
   }
 
   /**
@@ -168,11 +166,11 @@ trait ToolCommand[Args] extends Logging {
     * @param docsDir outputs the Markdown documentation in this directory
     */
   def generateDocumentation(docsDir: String): Unit = {
-    val outputDirectory= new File(docsDir)
+    val outputDirectory = new File(docsDir)
     outputDirectory.mkdirs()
-    val mainPageContents: List[(String,String)] = {
+    val mainPageContents: List[(String, String)] = {
       List(
-        (s"# ${toolName}",descriptionText),
+        (s"# ${toolName}", descriptionText),
         ("# Installation", installationText),
         ("# Manual", manualText),
         ("## Example", exampleText),
@@ -182,10 +180,10 @@ trait ToolCommand[Args] extends Logging {
       )
     }
 
-    contentsToMarkdown(mainPageContents, docsDir + "/index.md")
-    resourceToFile("/default.template.html", docsDir + "default.template.html")
-    resourceToFile("/bootstrap.css", docsDir + "/css/bootstrap.css")
-    resourceToFile("/docs.css", docsDir + "/css/docs.css")
+    contentsToMarkdown(mainPageContents, new File(docsDir + "/index.md"))
+    resourceToFile("/default.template.html", new File(docsDir + "default.template.html"))
+    resourceToFile("/bootstrap.css", new File(docsDir + "/css/bootstrap.css"))
+    resourceToFile("/docs.css", new File(docsDir + "/css/docs.css"))
 
     val configFile = new PrintWriter(new File(docsDir + "directory.conf"))
     val navigationOrder = List(

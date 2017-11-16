@@ -70,15 +70,17 @@ class ToolCommandTest extends TestNGSuite with Matchers {
   }
   @Test
   def testReadme(): Unit = {
-    val readmeLocation = "target/test/readme/README.md"
-    TestTool.generateReadme(readmeLocation)
-    val readme = scala.io.Source.fromFile(readmeLocation)
+    val readmeFile = new File("target/test/readme/README.md")
+    TestTool.generateReadme(readmeFile)
+    val readme = scala.io.Source.fromFile(readmeFile)
     val lines = try readme.mkString finally readme.close()
 
     lines should include("https://biopet.github.io/TestTool")
     lines should include("# Documentation")
     lines should include("This tool is part of BIOPET")
     lines should include("For any question related to this tool")
+
   }
 }
+
 
