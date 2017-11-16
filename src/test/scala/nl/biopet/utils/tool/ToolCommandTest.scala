@@ -30,6 +30,7 @@ class ToolCommandTest extends TestNGSuite with Matchers {
       opt[Unit]('x', "longX") required()
       opt[Unit]("power") unbounded() text "Palpatine's requested feature"
       opt[Unit]("sith") minOccurs 2 maxOccurs 2 text "There are always 2"
+      opt[Unit]("hidden") hidden() text "Should not appear in usage!"
     }
 
     /** Returns an empty/default args case class */
@@ -75,6 +76,7 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("<td>yes (2 required)</td>")
     lines should include("<td>yes (unlimited)</td>")
     lines should include("<td>yes (2 times)</td>")
+    lines should not include("Should not appear in usage!")
   }
   @Test
   def testReadme(): Unit = {
@@ -87,6 +89,18 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("# Documentation")
     lines should include("This tool is part of BIOPET")
     lines should include("For any question related to this tool")
+
+  }
+  @Test
+  def testTableMethod: Unit = {
+    the [java.lang.IllegalArgumentException] thrownBy {
+    TestTool.htmlTable(
+      List("Column1", "Column2"),
+      List(
+        List("1","2"),
+        List("a","b","c")
+      )
+    ) } should have message "requirement failed: Number of items in each row should be equal number of items in header."
 
   }
 }
