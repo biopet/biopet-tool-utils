@@ -23,9 +23,11 @@ import scala.io.Source
 /**
   * Trait for biopet tools, sets some default args
   */
-trait ToolCommand[Args] extends Logging with ToolDocumentation {
+trait ToolCommand[Args] extends Logging {
   /** This will return the name of the tool */
   def toolName: String = this.getClass.getSimpleName.stripSuffix("$")
+
+  def urlToolName: String = toolName.toLowerCase()
 
   /** This is the main entry point of the tool */
   def main(args: Array[String])
@@ -44,33 +46,33 @@ trait ToolCommand[Args] extends Logging with ToolDocumentation {
   }
 
   def usageText: String = {
-    // Prepend code block with four spaces in concordance with Markdown specification.
+    /** Prepend code block with four spaces in concordance with Markdown specification. */
     val usage = new StringBuffer()
     val usageLines: Array[String] = argsParser.usage.split("\n")
     usageLines.foreach(line => usage.append("    " + line + System.lineSeparator()))
     usage.toString
   }
 
-  // Force description to be written for each tool.
+  /** Force description to be written for each tool. */
   def descriptionText: String
 
-  // Force a manual to be written for each tool
+  /** Force a manual to be written for each tool */
   def manualText: String
 
-  // Force an example to be written for each tool
+  /** Force an example to be written for each tool */
   def exampleText: String
 
-  // Universal text for pointing to the documentation.
+  /** Universal text for pointing to the documentation.*/
   // TODO: Change link.
-  def documentationText: String = s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${toolName})."
+  def documentationText: String = s"For documentation and manuals visit our [github.io page](https://biopet.github.io/${urlToolName})."
 
-  // Universal contact text
+  /** Universal contact text */
   def contactText: String =
     s"""
        |<p>
        |  <!-- Obscure e-mail address for spammers -->
        |For any question related to this tool, please use the
-       |<a href='https://github.com/biopet/${toolName}/issues'>github issue tracker</a>
+       |<a href='https://github.com/biopet/${urlToolName}/issues'>github issue tracker</a>
        |or contact
        |  <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;
        | &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
@@ -79,7 +81,7 @@ trait ToolCommand[Args] extends Logging with ToolDocumentation {
        |
      """.stripMargin
 
-  // Universal text referring to BIOPET.
+  /** Universal text referring to BIOPET. */
   def aboutText: String =
     """
       |This tool is part of BIOPET tool suite that is developed at LUMC by [the SASC team](http://sasc.lumc.nl/).
@@ -87,21 +89,21 @@ trait ToolCommand[Args] extends Logging with ToolDocumentation {
       |dedicate data analysis task or added as part of [BIOPET pipelines](http://biopet-docs.readthedocs.io/en/latest/).
     """.stripMargin
 
-  // Universal installation text
+  /** Universal installation text */
   def installationText: String =
     s"""
        |This tool requires Java 8 to be installed on your device. Download Java 8
        |[here](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
        |or install via your distribution's package manager.
        |
-      |Download the latest version of ${toolName} [here](https://github.com/biopet/${toolName}/releases/).
+      |Download the latest version of ${toolName} [here](https://github.com/biopet/${urlToolName}/releases/).
        |To generate the usage run:
        |
       |    java -jar ${toolName}-version.jar --help
        |
     """.stripMargin
 
-  // Which chapters should be in the README
+  /** Which chapters should be in the README */
   def readmeContents: List[(String,String)] = {
     List(
       (s"# ${toolName}",descriptionText),
