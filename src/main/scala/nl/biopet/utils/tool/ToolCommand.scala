@@ -221,10 +221,9 @@ trait ToolCommand[Args] extends Logging {
 
   /**
     * Outputs markdown documentation for LAIKA processing.
-    * @param docsDir outputs the Markdown documentation in this directory
+    * @param outputDirectory outputs the Markdown documentation in this directory
     */
-  def generateDocumentation(docsDir: String): Unit = {
-    val outputDirectory = new File(docsDir)
+  def generateDocumentation(outputDirectory: File): Unit = {
     outputDirectory.mkdirs()
     val mainPageContents: List[(String, String)] = {
       List(
@@ -238,13 +237,13 @@ trait ToolCommand[Args] extends Logging {
       )
     }
 
-    contentsToMarkdown(mainPageContents, new File(docsDir + "/index.md"))
+    contentsToMarkdown(mainPageContents, new File(outputDirectory + "/index.md"))
     resourceToFile("/nl/biopet/utils/tool/default.template.html",
-                   new File(docsDir + "default.template.html"))
-    resourceToFile("/nl/biopet/utils/tool/bootstrap.css", new File(docsDir + "/css/bootstrap.css"))
-    resourceToFile("/nl/biopet/utils/tool/docs.css", new File(docsDir + "/css/docs.css"))
+                   new File(outputDirectory + "/default.template.html"))
+    resourceToFile("/nl/biopet/utils/tool/bootstrap.css", new File(outputDirectory + "/css/bootstrap.css"))
+    resourceToFile("/nl/biopet/utils/tool/docs.css", new File(outputDirectory + "/css/docs.css"))
 
-    val configFile = new PrintWriter(new File(docsDir + "directory.conf"))
+    val configFile = new PrintWriter(new File(outputDirectory + "/directory.conf"))
     val navigationOrder = List(
       "index.md"
     ).mkString("\n")

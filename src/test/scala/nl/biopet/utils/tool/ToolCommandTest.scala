@@ -52,15 +52,15 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
   @Test
   def testDocumentation(): Unit = {
-    val outputDir = "target/test/docs/"
+    val outputDir = new File("target/test/docs/")
     TestTool.generateDocumentation(outputDir)
-    new File(outputDir, "index.md") should exist
-    new File(outputDir, "css/bootstrap.css") should exist
-    new File(outputDir, "css/docs.css") should exist
-    new File(outputDir, "directory.conf") should exist
-    new File(outputDir, "default.template.html") should exist
+    new File(outputDir, "/index.md") should exist
+    new File(outputDir, "/css/bootstrap.css") should exist
+    new File(outputDir, "/css/docs.css") should exist
+    new File(outputDir, "/directory.conf") should exist
+    new File(outputDir, "/default.template.html") should exist
 
-    val index = scala.io.Source.fromFile(outputDir + "index.md")
+    val index = scala.io.Source.fromFile(outputDir + "/index.md")
     val lines = try index.mkString finally index.close()
     lines should include("--num")
     lines should include("For any question related to this tool")
