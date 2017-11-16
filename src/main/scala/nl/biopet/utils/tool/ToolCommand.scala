@@ -18,6 +18,7 @@ import java.io.{File, PrintWriter}
 
 import nl.biopet.utils.Logging
 
+import scala.collection.mutable.ListBuffer
 import scala.io.Source
 
 /**
@@ -47,26 +48,56 @@ trait ToolCommand[Args] extends Logging {
       .getOrElse(throw new IllegalArgumentException)
   }
 
-  /** Creates a usage and prepends code block with four spaces in concordance with Markdown specification. */
+  /** Creates a html formatted usage string */
   def usageText: String = {
 
-    // Generate usage
-    val usage = new StringBuffer()
-    usage.append(s"options for ${toolName}:\n\n")
-    for (option <- argsParser.optionsForRender) {
-      val shortOpt: String = option.shortOpt.getOrElse("")
-      val optSeperator: String = if (option.shortOpt != None) ", " else ""
-      val name: String = option.fullName + optSeperator + shortOpt
-      val description: String = option.desc
-      val optionUsage: String =  f"$name%-35s" + description + "\n"
-      usage.append(optionUsage)
-    }
+    // Generate usage table by defining body and headers.
+    val headers: List[String] = List("Option", "Required", "Description")
 
-    // Format the usage for markdown.
-    val markdownFormattedUsage = new StringBuffer()
-    val usageLines: Array[String] = usage.toString.split("\n")
-    usageLines.foreach(line => markdownFormattedUsage.append("    " + line + "\n"))
-    markdownFormattedUsage.toString
+    def body: List[List[String]] = {
+      val body = new ListBuffer[List[String]]
+
+      for (option <- argsParser.optionsForRender) {
+        // Do not show usage if option is hidden.
+        if (!option.isHidden) {
+          val shortOpt: String = if (option.shortOpt != None) "-" + option.shortOpt.get else ""
+          val optSeperator: String = if (option.shortOpt != None) ", " else ""
+          val name: String = option.fullName + optSeperator + shortOpt
+          val description: String = option.desc
+          val required: String = if (option.getMinOccurs >= 1) "yes" else "no"
+
+          val tableRow: List[String] = List(name, required, description)
+          body.append(tableRow)
+        }
+      }
+      body.toList
+    }
+    s"Usage for ${toolName}:\n" + htmlTable(headers,body)
+  }
+
+  /**
+    * Returns a HTML table.
+    * @param headers A list of strings that will make up the header.
+    * @param body A list of lists of strings. Each list of strings is a row.
+    *             Rows should be of equal length to the headers.
+    * @return A HTML table as a string. The table contains newlines and indentation for readability.
+    */
+  def htmlTable(headers: List[String], body: List[List[String]]): String = {
+
+    // Validate that all rows have a length equal to the header
+    body.foreach(row => assert(row.length == headers.length) )
+
+    val table = new StringBuffer()
+
+    table.append("<table>\n")
+    table.append(headers.mkString("\t<thead>\n\t\t<tr>\n\t\t\t<th>", "</th>\n\t\t\t<th>","</th>\n\t\t</tr>\n\t</thead>\n"))
+    table.append("\t<tbody>\n")
+    for (row <- body) {
+      table.append(row.mkString("\t\t<tr>\n\t\t\t<td>", "</td>\n\t\t\t<td>","</td>\n\t\t</tr>\n"))
+    }
+    table.append("\t</tbody>\n")
+    table.append("</table>\n")
+    table.toString.replace("\t","  ")
   }
 
   /** Force description to be written for each tool. */
