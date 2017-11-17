@@ -16,7 +16,7 @@ package nl.biopet.utils.tool
 
 import java.io.{File, PrintWriter}
 
-import nl.biopet.utils.{IoUtils, Logging}
+import nl.biopet.utils.{Logging,IoUtils}
 
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
@@ -223,15 +223,6 @@ trait ToolCommand[Args] extends Logging {
     fileWriter.close()
   }
 
-  /**
-    * Converts a resource to a file
-    * @param resource Which resource
-    * @param outputFile The output file
-    */
-  def resourceToFile(resource: String, outputFile: File): Unit = {
-    val source = getClass.getResourceAsStream(resource)
-    IoUtils.copyStreamToFile(source, outputFile, createDirs = true)
-  }
 
   /**
     * Generates the README
@@ -250,11 +241,11 @@ trait ToolCommand[Args] extends Logging {
 
     contentsToMarkdown(mainPageContents,
                        new File(outputDirectory + "/index.md"))
-    resourceToFile("/nl/biopet/utils/tool/default.template.html",
+    IoUtils.resourceToFile("/nl/biopet/utils/tool/default.template.html",
                    new File(outputDirectory + "/default.template.html"))
-    resourceToFile("/nl/biopet/utils/tool/bootstrap.css",
+    IoUtils.resourceToFile("/nl/biopet/utils/tool/bootstrap.css",
                    new File(outputDirectory + "/css/bootstrap.css"))
-    resourceToFile("/nl/biopet/utils/tool/docs.css",
+    IoUtils.resourceToFile("/nl/biopet/utils/tool/docs.css",
                    new File(outputDirectory + "/css/docs.css"))
 
     val configFile = new PrintWriter(
