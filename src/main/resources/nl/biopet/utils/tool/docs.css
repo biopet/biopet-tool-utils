@@ -1,0 +1,142 @@
+
+body {
+  position: relative;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+section {
+  padding-top: 30px;
+}
+.page-header {
+  padding-top: 30px;
+  padding-bottom: 4px;
+  border-bottom-color: #DDD;
+}
+section > .page-header,
+section > .lead {
+  color: #5a5a5a;
+}
+section > ul li {
+  margin-bottom: 5px;
+}
+
+li ul {
+  margin-bottom: 22px;
+  margin-top: -5px;
+}
+
+h1 {
+  font-size: 34px;
+}
+h2 {
+  margin-top: 35px;
+  margin-bottom: 12px;
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 20px;
+  margin-top: 16px;
+  margin-bottom: 4px;
+}
+
+.affix {
+    top: 60px; 
+}
+
+.nav-header {
+  font-size: 15px;
+  color: #931813;
+}
+
+.nav-list li {
+  margin-left: 10px;
+}
+
+.nav-list li a:hover {
+  background-color: #e4f0f2;
+}
+.nav-list li a {
+  padding: 1px 15px;
+  color: #007c99;
+  font-weight: normal;
+}
+.follow {
+  margin-top: 4px;
+}
+.nav-list .active a, .nav-list .active a:hover {
+  background-color: #006180;
+}
+code, pre {
+  color: #006180;
+  border: 1px solid #c3d6d8;
+  background-color: #ebf6f7;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+code {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+a {
+  color: #931813; 
+  font-weight: bold;
+}
+a:hover {
+  color: #931813; 
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #931813;  
+}
+.nav {
+  border: 2px solid #c3d6d8;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.nav-top, .nav-bottom {
+  padding: 9px 0px;
+  text-align: center;
+}
+
+@media (max-width: 942px), (max-height: 856px) {
+  [class*="span"] {
+    float: none;
+    margin-left: 0px;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+  }
+  .span8 {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .row {
+    margin-left: 0px;
+  }
+  body {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+  .container {
+    width: auto;
+  }
+  .affix {
+    position: static;
+    width: 222px;
+    top: 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .span8 {
+    width: 100%;
+    margin-left: 0px;
+  }  
+}
+
