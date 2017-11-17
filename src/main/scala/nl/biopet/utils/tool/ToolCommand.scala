@@ -16,7 +16,7 @@ package nl.biopet.utils.tool
 
 import java.io.{File, PrintWriter}
 
-import nl.biopet.utils.{Logging, IoUtils}
+import nl.biopet.utils.{IoUtils, Logging, Markdown}
 
 import scala.collection.mutable.ListBuffer
 
