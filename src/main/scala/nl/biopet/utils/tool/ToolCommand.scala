@@ -16,7 +16,7 @@ package nl.biopet.utils.tool
 
 import java.io.{File, PrintWriter}
 
-import nl.biopet.utils.{Logging,IoUtils}
+import nl.biopet.utils.{Logging, IoUtils}
 
 import scala.collection.mutable.ListBuffer
 
@@ -181,15 +181,15 @@ trait ToolCommand[Args] extends Logging {
     */
   def generateDocumentation(outputDirectory: File): Unit = {
     outputDirectory.mkdirs()
-
+    val cssDirectory = new File(outputDirectory, "css")
     Markdown.contentsToMarkdown(mainPageContents,
-                       new File(outputDirectory + "/index.md"))
+                                new File(outputDirectory, "index.md"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/default.template.html",
-                   new File(outputDirectory + "/default.template.html"))
+                           new File(outputDirectory, "default.template.html"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/bootstrap.css",
-                   new File(outputDirectory + "/css/bootstrap.css"))
+                           new File(cssDirectory, "bootstrap.css"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/docs.css",
-                   new File(outputDirectory + "/css/docs.css"))
+                           new File(cssDirectory, "docs.css"))
 
     val configFile = new PrintWriter(
       new File(outputDirectory + "/directory.conf"))

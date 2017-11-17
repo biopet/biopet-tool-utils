@@ -25,14 +25,14 @@ object Markdown {
     table.append("<table>\n")
     table.append(
       headers.mkString("\t<thead>\n\t\t<tr>\n\t\t\t<th>",
-        "</th>\n\t\t\t<th>",
-        "</th>\n\t\t</tr>\n\t</thead>\n"))
+                       "</th>\n\t\t\t<th>",
+                       "</th>\n\t\t</tr>\n\t</thead>\n"))
     table.append("\t<tbody>\n")
     for (row <- body) {
       table.append(
         row.mkString("\t\t<tr>\n\t\t\t<td>",
-          "</td>\n\t\t\t<td>",
-          "</td>\n\t\t</tr>\n"))
+                     "</td>\n\t\t\t<td>",
+                     "</td>\n\t\t</tr>\n"))
     }
     table.append("\t</tbody>\n")
     table.append("</table>\n")
@@ -45,9 +45,9 @@ object Markdown {
     * @param outputFile The output file to which the markdown file is written.
     */
   def contentsToMarkdown(
-                          contents: List[(String, String)],
-                          outputFile: File
-                        ): Unit = {
+      contents: List[(String, String)],
+      outputFile: File
+  ): Unit = {
     outputFile.getParentFile.mkdirs()
     val fileWriter = new PrintWriter(outputFile)
     for ((head, content) <- contents) {
