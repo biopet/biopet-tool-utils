@@ -33,8 +33,9 @@
         
         <ul class="nav nav-list affix">
         <H3>Content</H3>
-          @:toc.
-          
+          @:for "document.sections": {
+          <li><a href="#{{id}}">{{title}}</a></li>
+          }
 
         </ul>
 
