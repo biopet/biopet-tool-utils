@@ -3,39 +3,60 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{document.title}}</title>
+    <title>{{config.title}}</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link href="css/bootstrap.css" rel="stylesheet">
-    <link href="css/docs.css" rel="stylesheet">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link href="css/docs.css" rel="stylesheet">
 
   </head>
 
-  <body data-spy="scroll" data-target=".toc" data-offset="200">
+  <body  data-spy="scroll" data-target=".toc" data-offset="200">
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">{{config.title}}</a>
+        </div>
+      </div>
+      <div class="nav navbar-nav navbar-right">
+        <p class="navbar-text" id="Version">
+        Version</p>
+        <li><a href="api/index.html"><span class="glyphicon glyphicon-share-alt" aria-hidden="true">
+          </span> api documentation</a></li>
+      </div>
 
+    </div>
 
+  </nav>
   <div class="container">
 
     <!-- Docs nav
     ================================================== -->
     <div class="row">
-      <div class="span4 toc" >
+      <div class="col-md-2 toc" >
         
-        <ul class="nav nav-list affix">
-        <H3>Content</H3>
-          @:toc.
-          
+        <ul class="nav nav-pills nav-stacked affix">
+          @:for "document.sections": {
+          <li><a href="#{{id}}">{{title}}</a></li>
+          }
 
         </ul>
-        
       </div>
       
-      <div class="span8" id="top">
+      <div class="col-md-10" id="top">
 
         {{document.content}}      
 
@@ -44,4 +65,13 @@
 
   </div>
 
-</body></html>
+</body>
+  <script>
+    var loc = window.location.pathname;
+    var thisDir = loc.substring(0, loc.lastIndexOf('/'));
+    var splitLocation = window.location.pathname.split('/');
+    var version = splitLocation[splitLocation.length - 2]
+    document.getElementById("Version").innerHTML = "Version " + version;
+
+  </script>
+</html>
