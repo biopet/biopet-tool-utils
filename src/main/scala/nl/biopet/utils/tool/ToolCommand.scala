@@ -114,7 +114,7 @@ trait ToolCommand[Args] extends Logging {
   /** Which chapters should be on the tool documentation's main page */
   def mainPageContents: List[(String, String)] = {
     List(
-      (s"# $toolName", descriptionText),
+      (s"# Description", descriptionText),
       ("# Installation", installationText),
       ("# Manual", manualText),
       ("## Example", exampleText),
@@ -186,8 +186,6 @@ trait ToolCommand[Args] extends Logging {
                                 new File(outputDirectory, "index.md"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/default.template.html",
                            new File(outputDirectory, "default.template.html"))
-    IoUtils.resourceToFile("/nl/biopet/utils/tool/bootstrap.css",
-                           new File(cssDirectory, "bootstrap.css"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/docs.css",
                            new File(cssDirectory, "docs.css"))
 

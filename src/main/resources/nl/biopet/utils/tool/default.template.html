@@ -3,6 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{config.title}}</title>
 
@@ -18,12 +19,20 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-
+    <link href="css/docs.css" rel="stylesheet">
   </head>
 
-  <body data-spy="scroll" data-target=".toc" data-offset="200">
+  <body  data-spy="scroll" data-target=".toc" data-offset="200">
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">{{config.title}}</a>
+        </div>
+      </div>
+    </div>
 
-
+  </nav>
   <div class="container">
 
     <!-- Docs nav
@@ -31,14 +40,12 @@
     <div class="row">
       <div class="col-md-3 toc" >
         
-        <ul class="nav nav-list affix">
-        <H3>Content</H3>
+        <ul class="nav nav-pills nav-stacked affix">
           @:for "document.sections": {
           <li><a href="#{{id}}">{{title}}</a></li>
           }
 
         </ul>
-
       </div>
       
       <div class="col-md-9" id="top">
