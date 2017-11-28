@@ -195,7 +195,7 @@ trait ToolCommand[Args] extends Logging {
                            new File(cssDirectory, "docs.css"))
 
     val configFile = new PrintWriter(
-      new File(versionDirectory + "/directory.conf"))
+      new File(versionDirectory, "/directory.conf"))
     val navigationOrder = List(
       "index.md"
     ).mkString("\n")
