@@ -209,7 +209,8 @@ trait ToolCommand[Args] extends Logging {
 
     Documentation.htmlRedirector(
       outputFile = new File(outputDirectory, "index.html"),
-      link = versionDirectory.toString() + "index.html",
+      link =  s"./$version/index.html",
+
       title = s"${toolName} Documentation",
       redirectText = s"Click here to go to ${toolName} documentation."
     )
