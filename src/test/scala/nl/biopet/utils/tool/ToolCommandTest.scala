@@ -56,13 +56,13 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     val outputDir = new File("target/test/docs/")
     val version = "test_version"
     val versionDir = new File(outputDir, version)
-    TestTool.generateDocumentation(outputDir, version)
+    TestTool.generateDocumentation(outputDir, version, redirect = false)
 
     new File(versionDir, "index.md") should exist
     new File(versionDir, "css/docs.css") should exist
     new File(versionDir, "directory.conf") should exist
     new File(versionDir, "default.template.html") should exist
-    new File(outputDir, "index.html") should exist
+    new File(outputDir, "index.html") shouldNot exist
 
     val index = scala.io.Source.fromFile(versionDir + "/index.md")
     val lines = try index.mkString finally index.close()
@@ -83,6 +83,8 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("<td>yes (2 times)</td>")
     lines should not include "Should not appear in usage!"
 
+    TestTool.generateDocumentation(outputDir, version, redirect = true)
+    new File(outputDir, "index.html") should exist
     val redirector = Source.fromFile(new File(outputDir, "index.html")).mkString
     redirector should include(s"""window.location.replace("./$version/index.html");""")
     redirector should include(s"""<a href="./$version/index.html">Click here to go to TestTool documentation.""")

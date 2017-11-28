@@ -179,7 +179,10 @@ trait ToolCommand[Args] extends Logging {
     * Outputs markdown documentation for LAIKA processing.
     * @param outputDirectory outputs the Markdown documentation in this directory
     */
-  def generateDocumentation(outputDirectory: File, version: String = "develop"): Unit = {
+  def generateDocumentation(outputDirectory: File,
+                            version: String = "develop",
+                            redirect: Boolean = false
+                           ): Unit = {
 
     val versionDirectory = new File(outputDirectory, version)
     versionDirectory.mkdirs()
@@ -207,13 +210,15 @@ trait ToolCommand[Args] extends Logging {
     configFile.write(config)
     configFile.close()
 
-    Documentation.htmlRedirector(
-      outputFile = new File(outputDirectory, "index.html"),
-      link =  s"./$version/index.html",
+    if (redirect) {
+      Documentation.htmlRedirector(
+        outputFile = new File(outputDirectory, "index.html"),
+        link = s"./$version/index.html",
 
-      title = s"${toolName} Documentation",
-      redirectText = s"Click here to go to ${toolName} documentation."
-    )
+        title = s"${toolName} Documentation",
+        redirectText = s"Click here to go to ${toolName} documentation."
+      )
+    }
   }
 
 }
