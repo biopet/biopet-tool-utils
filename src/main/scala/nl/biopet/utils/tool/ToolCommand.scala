@@ -181,15 +181,14 @@ trait ToolCommand[Args] extends Logging {
     */
   def generateDocumentation(outputDirectory: File,
                             version: String = "develop",
-                            redirect: Boolean = false
-                           ): Unit = {
+                            redirect: Boolean = false): Unit = {
 
     val versionDirectory = new File(outputDirectory, version)
     versionDirectory.mkdirs()
 
     val cssDirectory = new File(versionDirectory, "css")
     Documentation.contentsToMarkdown(mainPageContents,
-                                new File(versionDirectory, "index.md"))
+                                     new File(versionDirectory, "index.md"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/default.template.html",
                            new File(versionDirectory, "default.template.html"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/docs.css",
@@ -214,7 +213,6 @@ trait ToolCommand[Args] extends Logging {
       Documentation.htmlRedirector(
         outputFile = new File(outputDirectory, "index.html"),
         link = s"./$version/index.html",
-
         title = s"${toolName} Documentation",
         redirectText = s"Click here to go to ${toolName} documentation."
       )
