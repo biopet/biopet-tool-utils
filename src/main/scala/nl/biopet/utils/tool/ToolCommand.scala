@@ -16,7 +16,7 @@ package nl.biopet.utils.tool
 
 import java.io.{File, PrintWriter}
 
-import nl.biopet.utils.{IoUtils, Logging, Markdown}
+import nl.biopet.utils.{IoUtils, Logging, Documentation}
 
 import scala.collection.mutable.ListBuffer
 
@@ -164,7 +164,7 @@ trait ToolCommand[Args] extends Logging {
       }
       body.toList
     }
-    s"Usage for $toolName:\n" + Markdown.htmlTable(headers, body)
+    s"Usage for $toolName:\n" + Documentation.htmlTable(headers, body)
   }
 
   /**
@@ -172,25 +172,30 @@ trait ToolCommand[Args] extends Logging {
     * @param outputFile The readme file
     */
   def generateReadme(outputFile: File): Unit = {
-    Markdown.contentsToMarkdown(readmeContents, outputFile)
+    Documentation.contentsToMarkdown(readmeContents, outputFile)
   }
 
   /**
     * Outputs markdown documentation for LAIKA processing.
     * @param outputDirectory outputs the Markdown documentation in this directory
     */
-  def generateDocumentation(outputDirectory: File): Unit = {
-    outputDirectory.mkdirs()
-    val cssDirectory = new File(outputDirectory, "css")
-    Markdown.contentsToMarkdown(mainPageContents,
-                                new File(outputDirectory, "index.md"))
+  def generateDocumentation(outputDirectory: File,
+                            version: String,
+                            redirect: Boolean = false): Unit = {
+
+    val versionDirectory = new File(outputDirectory, version)
+    versionDirectory.mkdirs()
+
+    val cssDirectory = new File(versionDirectory, "css")
+    Documentation.contentsToMarkdown(mainPageContents,
+                                     new File(versionDirectory, "index.md"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/default.template.html",
-                           new File(outputDirectory, "default.template.html"))
+                           new File(versionDirectory, "default.template.html"))
     IoUtils.resourceToFile("/nl/biopet/utils/tool/docs.css",
                            new File(cssDirectory, "docs.css"))
 
     val configFile = new PrintWriter(
-      new File(outputDirectory + "/directory.conf"))
+      new File(versionDirectory, "/directory.conf"))
     val navigationOrder = List(
       "index.md"
     ).mkString("\n")
@@ -203,6 +208,15 @@ trait ToolCommand[Args] extends Logging {
     }
     configFile.write(config)
     configFile.close()
+
+    if (redirect) {
+      Documentation.htmlRedirector(
+        outputFile = new File(outputDirectory, "index.html"),
+        link = s"./$version/index.html",
+        title = s"${toolName} Documentation",
+        redirectText = s"Click here to go to ${toolName} documentation."
+      )
+    }
   }
 
 }
