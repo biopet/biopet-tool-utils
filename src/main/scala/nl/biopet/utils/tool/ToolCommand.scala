@@ -180,7 +180,7 @@ trait ToolCommand[Args] extends Logging {
     * @param outputDirectory outputs the Markdown documentation in this directory
     */
   def generateDocumentation(outputDirectory: File,
-                            version: String = "develop",
+                            version: String,
                             redirect: Boolean = false): Unit = {
 
     val versionDirectory = new File(outputDirectory, version)
