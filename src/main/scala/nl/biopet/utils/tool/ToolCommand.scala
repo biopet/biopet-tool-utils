@@ -74,11 +74,13 @@ trait ToolCommand[Args] extends Logging {
     def argumentsPerFlag: List[String] = {
       val argumentsList = new ListBuffer[String]
       for (argument <- args.mkString(" ").split("-")){
-        argumentsList.append("-" + argument)
+        if (argument != "") {
+          argumentsList.append("-" + argument)
+        }
       }
       argumentsList.toList
     }
-    s"    java -jar <${toolName}_jar> \ \n    " +  argumentsPerFlag.mkString(" \ \n    ")
+    s"\n\n    java -jar <${toolName}_jar> \\\n    " +  argumentsPerFlag.mkString(" \\\n    " + "\n")
   }
 
   /** Force an example to be written for each tool */

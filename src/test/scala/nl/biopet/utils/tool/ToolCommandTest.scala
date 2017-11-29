@@ -103,6 +103,12 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("For any question related to TestTool")
 
   }
+
+  @Test
+  def testExample(): Unit = {
+    println(TestTool.unsafeExample("-bla 3 -bla 2", "bla 4", "-x bl", "-x" , "bladibla"))
+  }
+
 }
 
 
