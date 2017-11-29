@@ -57,6 +57,23 @@ trait ToolCommand[Args] extends Logging {
   /** Force a manual to be written for each tool */
   def manualText: String
 
+  /** Convert and tests args */
+  def example(args: String*): String = {
+    cmdArrayToArgs(args.toArray)
+
+    exampleToMarkdown(args:_*)
+  }
+
+  /** Convert and *not* tests args */
+  def unsaveExample(args: String*): String = {
+    exampleToMarkdown(args:_*)
+  }
+
+  /** Common function to convert to string */
+  private def exampleToMarkdown(args: String*): String = {
+    s"`java -jar <${toolName}_jar> " + args.mkString(" ") + "`"
+  }
+
   /** Force an example to be written for each tool */
   def exampleText: String
 

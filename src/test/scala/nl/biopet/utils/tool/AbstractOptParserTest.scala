@@ -35,12 +35,9 @@ class AbstractOptParserTest extends BiopetTest {
     val cmdArgs =
       parser.parse(args, Args()).getOrElse(throw new IllegalArgumentException)
   }
+
   @Test
   def testVerbosityFlags(): Unit = {
-
-    //Default should be info
-    EmptyTool.main(Array())
-    EmptyTool.logger.getLevel shouldBe Level.INFO
 
     EmptyTool.main(Array("--log_level", "debug"))
     EmptyTool.logger.getLevel shouldBe Level.DEBUG
