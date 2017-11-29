@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{config.title}}</title>
@@ -34,12 +33,12 @@
           <a class="navbar-brand" href="#">{{config.title}}</a>
         </div>
       </div>
-      <div class="nav navbar-nav navbar-right">
-        <p class="navbar-text" id="Version">
-        Version</p>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="navbar-text" id="Version">
+        Version</li>
         <li><a href="api/index.html"><span class="glyphicon glyphicon-share-alt" aria-hidden="true">
           </span> api documentation</a></li>
-      </div>
+      </ul>
 
     </div>
 
@@ -67,14 +66,13 @@
     </div>
 
   </div>
-
-</body>
   <script>
     var loc = window.location.pathname;
     var thisDir = loc.substring(0, loc.lastIndexOf('/'));
     var splitLocation = window.location.pathname.split('/');
     var version = splitLocation[splitLocation.length - 2]
     document.getElementById("Version").innerHTML = "Version " + version;
-
   </script>
+</body>
+
 </html>
