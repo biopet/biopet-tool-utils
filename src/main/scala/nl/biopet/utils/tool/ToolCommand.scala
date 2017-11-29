@@ -65,13 +65,20 @@ trait ToolCommand[Args] extends Logging {
   }
 
   /** Convert and *not* tests args */
-  def unsaveExample(args: String*): String = {
+  def unsafeExample(args: String*): String = {
     exampleToMarkdown(args:_*)
   }
 
   /** Common function to convert to string */
   private def exampleToMarkdown(args: String*): String = {
-    s"`java -jar <${toolName}_jar> " + args.mkString(" ") + "`"
+    def argumentsPerFlag: List[String] = {
+      val argumentsList = new ListBuffer[String]
+      for (argument <- args.mkString(" ").split("-")){
+        argumentsList.append("-" + argument)
+      }
+      argumentsList.toList
+    }
+    s"    java -jar <${toolName}_jar> \ \n    " +  argumentsPerFlag.mkString(" \ \n    ")
   }
 
   /** Force an example to be written for each tool */
