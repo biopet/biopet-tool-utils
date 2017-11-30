@@ -82,6 +82,10 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("<td>yes (unlimited)</td>")
     lines should include("<td>yes (2 times)</td>")
     lines should not include "Should not appear in usage!"
+    lines should include("# Contributing")
+    lines should include(
+      s"""Bug reports, feature requests and feedback can be submitted at our
+        |[issue tracker](https://github.com/biopet/testtool/issues).""".stripMargin)
 
     TestTool.generateDocumentation(outputDir, version, redirect = true)
     new File(outputDir, "index.html") should exist
