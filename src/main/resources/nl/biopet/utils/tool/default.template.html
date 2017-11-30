@@ -47,13 +47,16 @@
 
     <div class="row">
       <div class="col-sm-3 col-md-2 sidebar" >
+
         <ul class="nav nav-sidebar nav-list">
-          <li classs="nav-header">Index</li>
+          <li><b>Index</b></li>
           @:for "document.sections": {
           <li><a href="#{{id}}">{{title}}</a></li>
           }
+        </ul>
+        <ul class="nav nav-sidebar nav-list">
+          <li><b>Project Links</b></li>
 
-          <li classs="nav-header">Project Links</li>
           <li><a href="https://github.com/biopet/{{config.urlToolName}}">Source code</a></li>
           <li><a href="https://github.com/biopet/{{config.urlToolName}}/issues">Feedback, feature requests and bug reports</a></li>
           <li><a href="api/index.html">API Documentation</a></li>
