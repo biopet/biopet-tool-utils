@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta charset="utf-8">
     <title>{{config.title}}</title>
 
     <!-- Latest compiled and minified CSS -->
@@ -25,40 +25,43 @@
 
   </head>
 
-  <body  data-spy="scroll" data-target=".toc" data-offset="200">
+  <body>
   <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
+    <div class="container-fluid">
       <div class="navbar-header">
         <div class="navbar-header">
           <a class="navbar-brand" href="#">{{config.title}}</a>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="navbar-text" id="Version">
+              Version</li>
+          </ul>
         </div>
       </div>
-      <ul class="nav navbar-nav navbar-right">
-        <li class="navbar-text" id="Version">
-        Version</li>
-        <li><a href="api/index.html"><span class="glyphicon glyphicon-share-alt" aria-hidden="true">
-          </span> api documentation</a></li>
-      </ul>
+
+
 
     </div>
 
   </nav>
   <div class="container">
 
-    <!-- Docs nav
-    ================================================== -->
     <div class="row">
-      <div class="col-md-2 toc" >
-        
-        <ul class="nav nav-stacked affix">
+      <div class="col-sm-3 col-md-2 sidebar" >
+        <ul class="nav nav-sidebar nav-list">
+          <li classs="nav-header">Index</li>
           @:for "document.sections": {
           <li><a href="#{{id}}">{{title}}</a></li>
           }
 
+          <li classs="nav-header">Project Links</li>
+          <li><a href="https://github.com/biopet/{{config.urlToolName}}">Source code</a></li>
+          <li><a href="https://github.com/biopet/{{config.urlToolName}}/issues">Feedback, feature requests and bug reports</a></li>
+          <li><a href="api/index.html">API Documentation</a></li>
         </ul>
+
       </div>
       
-      <div class="col-md-10" id="top">
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="top">
 
         {{document.content}}      
 
