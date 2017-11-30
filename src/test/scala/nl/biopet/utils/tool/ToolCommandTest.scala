@@ -4,6 +4,7 @@ import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.annotations.Test
 import java.io.File
+import org.scalatest.Assertions
 
 import scala.io.Source
 class ToolCommandTest extends TestNGSuite with Matchers {
@@ -110,7 +111,32 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
   @Test
   def testExample(): Unit = {
-    println(TestTool.unsafeExample("-bla 3 -bla 2", "bla 4", "-x bl", "-x" , "bladibla"))
+    val example = TestTool.unsafeExample("-a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+    example should include(
+      """    java -jar <TestTool_jar> \
+        |    -a 3 \
+        |    -b 2 bla 4 \
+        |    --bla \
+        |    --config config.yaml config2.json""".stripMargin)
+    val example2 = TestTool.unsafeExample("this_file.txt -a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+    example2 should include(
+      """    java -jar <TestTool_jar> this_file.txt \
+        |    -a 3 \
+        |    -b 2 bla 4 \
+        |    --bla \
+        |    --config config.yaml config2.json""".stripMargin)
+    val safeExample = TestTool.example("--sith", "--sith", "-n", "11", "-x")
+    safeExample should include(
+      """    java -jar <TestTool_jar> \
+        |    --sith \
+        |    --sith \
+        |    -n 11 \
+        |    -x""".stripMargin)
+
+    // Following should fail
+     intercept[IllegalArgumentException] {
+      TestTool.example("--sith", "--sith","--sith", "-n", "11", "-x")
+    }
   }
 
 }

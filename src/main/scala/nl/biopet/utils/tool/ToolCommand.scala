@@ -154,16 +154,19 @@ trait ToolCommand[Args] extends Logging {
 
   /** Common function to convert to string */
   private def exampleToMarkdown(args: String*): String = {
-    def argumentsPerFlag: List[String] = {
-      val argumentsList = new ListBuffer[String]
-      for (argument <- args.mkString(" ").split("-")){
-        if (argument != "") {
-          argumentsList.append("-" + argument)
-        }
+    val argumentsList = args.mkString(" ").split(" ")
+    val example = new StringBuffer()
+    example.append(s"\n\n    java -jar <${toolName}_jar>")
+    for (argument <- argumentsList) {
+      if (argument.startsWith("-")) {
+        example.append(" \\\n    " + argument)
       }
-      argumentsList.toList
+      else {
+        example.append(" " + argument)
+      }
     }
-    s"\n\n    java -jar <${toolName}_jar> \\\n    " +  argumentsPerFlag.mkString(" \\\n    " + "\n")
+    example.append("\n\n")
+    example.toString
   }
 
   /** Creates a html formatted usage string */
