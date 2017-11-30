@@ -86,7 +86,7 @@ trait ToolCommand[Args] extends Logging {
       |dedicate data analysis task or added as part of [BIOPET pipelines](http://biopet-docs.readthedocs.io/en/latest/).
       |
       |All tools in the BIOPET tool suite are [Free](https://www.gnu.org/philosophy/free-sw.html) and
-      |[Open Source](https://opensource.org/osd).
+      |[Open Source](https://opensource.org/osd) Software.
     """.stripMargin
 
   /** Universal contributing text */
