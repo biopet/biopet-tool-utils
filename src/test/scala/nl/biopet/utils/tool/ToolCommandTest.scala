@@ -88,6 +88,11 @@ class ToolCommandTest extends TestNGSuite with Matchers {
       s"""Bug reports, feature requests and feedback can be submitted at our
         |[issue tracker](https://github.com/biopet/testtool/issues).""".stripMargin)
 
+    val configFile = scala.io.Source.fromFile(versionDir + "/directory.conf")
+    val configLines = try configFile.mkString finally configFile.close()
+    configLines should include("urlToolName = \"testtool\"")
+    configLines should include("title = \"TestTool\"")
+
     TestTool.generateDocumentation(outputDir, version, redirect = true)
     new File(outputDir, "index.html") should exist
     val redirector = Source.fromFile(new File(outputDir, "index.html")).mkString
