@@ -245,6 +245,7 @@ trait ToolCommand[Args] extends Logging {
 
     val config: String = {
       s"""title = "$toolName"
+         |urlToolName = "$urlToolName"
          |
           """.stripMargin + "\nnavigationOrder = [\n" +
         navigationOrder + "\n]"
