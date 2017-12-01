@@ -4,6 +4,7 @@ import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
 import org.testng.annotations.Test
 import java.io.File
+import org.scalatest.Assertions
 
 import scala.io.Source
 class ToolCommandTest extends TestNGSuite with Matchers {
@@ -82,6 +83,15 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("<td>yes (unlimited)</td>")
     lines should include("<td>yes (2 times)</td>")
     lines should not include "Should not appear in usage!"
+    lines should include("# Contributing")
+    lines should include(
+      s"""Bug reports, feature requests and feedback can be submitted at our
+        |[issue tracker](https://github.com/biopet/testtool/issues).""".stripMargin)
+
+    val configFile = scala.io.Source.fromFile(versionDir + "/directory.conf")
+    val configLines = try configFile.mkString finally configFile.close()
+    configLines should include("urlToolName = \"testtool\"")
+    configLines should include("title = \"TestTool\"")
 
     TestTool.generateDocumentation(outputDir, version, redirect = true)
     new File(outputDir, "index.html") should exist
@@ -103,6 +113,37 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include("For any question related to TestTool")
 
   }
+
+  @Test
+  def testExample(): Unit = {
+    val example = TestTool.unsafeExample("-a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+    example should include(
+      """    java -jar <TestTool_jar> \
+        |    -a 3 \
+        |    -b 2 bla 4 \
+        |    --bla \
+        |    --config config.yaml config2.json""".stripMargin)
+    val example2 = TestTool.unsafeExample("this_file.txt -a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+    example2 should include(
+      """    java -jar <TestTool_jar> this_file.txt \
+        |    -a 3 \
+        |    -b 2 bla 4 \
+        |    --bla \
+        |    --config config.yaml config2.json""".stripMargin)
+    val safeExample = TestTool.example("--sith", "--sith", "-n", "11", "-x")
+    safeExample should include(
+      """    java -jar <TestTool_jar> \
+        |    --sith \
+        |    --sith \
+        |    -n 11 \
+        |    -x""".stripMargin)
+
+    // Following should fail
+     intercept[IllegalArgumentException] {
+      TestTool.example("--sith", "--sith","--sith", "-n", "11", "-x")
+    }
+  }
+
 }
 
 

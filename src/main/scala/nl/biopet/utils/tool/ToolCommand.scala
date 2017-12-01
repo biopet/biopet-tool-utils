@@ -72,9 +72,8 @@ trait ToolCommand[Args] extends Logging {
        |For any question related to $toolName, please use the
        |<a href='https://github.com/biopet/$urlToolName/issues'>github issue tracker</a>
        |or contact
-       |  <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;
-       | &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
-       |  &#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;</a>.
+       | <a href='http://sasc.lumc.nl/'>the SASC team</a> directly at: <a href='&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;'>
+       |&#115;&#97;&#115;&#99;&#64;&#108;&#117;&#109;&#99;&#46;&#110;&#108;</a>.
        |</p>
        |
      """.stripMargin
@@ -85,7 +84,21 @@ trait ToolCommand[Args] extends Logging {
       |$toolName is part of BIOPET tool suite that is developed at LUMC by [the SASC team](http://sasc.lumc.nl/).
       |Each tool in the BIOPET tool suite is meant to offer a standalone function that can be used to perform a
       |dedicate data analysis task or added as part of [BIOPET pipelines](http://biopet-docs.readthedocs.io/en/latest/).
+      |
+      |All tools in the BIOPET tool suite are [Free](https://www.gnu.org/philosophy/free-sw.html) and
+      |[Open Source](https://opensource.org/osd) Software.
     """.stripMargin
+
+  /** Universal contributing text */
+  def contributingText: String =
+    s"""The source code of $toolName can be found [here](https://github.com/biopet/$urlToolName).
+       |We welcome any contributions. Bug reports, feature requests and feedback can be submitted at our
+       |[issue tracker](https://github.com/biopet/$urlToolName/issues).
+       |
+       |$toolName is build using sbt. Before submitting a pull request, make sure all tests can be passed by
+       |running `sbt test` from the project's root. We recommend using an IDE to work on $toolName. We have had
+       |good results with [this IDE](https://www.jetbrains.com/idea/).
+       |""".stripMargin
 
   /** Universal installation text */
   def installationText: String =
@@ -120,11 +133,41 @@ trait ToolCommand[Args] extends Logging {
       ("## Example", exampleText),
       ("## Usage", usageText),
       ("# About", aboutText),
+      ("# Contributing", contributingText),
       ("# Contact", contactText)
     )
   }
 
   // DOCUMENTATION METHODS
+
+  /** Convert and tests args */
+  def example(args: String*): String = {
+    cmdArrayToArgs(args.toArray)
+
+    exampleToMarkdown(args:_*)
+  }
+
+  /** Convert and *not* tests args */
+  def unsafeExample(args: String*): String = {
+    exampleToMarkdown(args:_*)
+  }
+
+  /** Common function to convert to string */
+  private def exampleToMarkdown(args: String*): String = {
+    val argumentsList = args.mkString(" ").split(" ")
+    val example = new StringBuffer()
+    example.append(s"\n\n    java -jar <${toolName}_jar>")
+    for (argument <- argumentsList) {
+      if (argument.startsWith("-")) {
+        example.append(" \\\n    " + argument)
+      }
+      else {
+        example.append(" " + argument)
+      }
+    }
+    example.append("\n\n")
+    example.toString
+  }
 
   /** Creates a html formatted usage string */
   def usageText: String = {
@@ -164,7 +207,7 @@ trait ToolCommand[Args] extends Logging {
       }
       body.toList
     }
-    s"Usage for $toolName:\n" + Documentation.htmlTable(headers, body)
+    s"Usage for $toolName:\n\n" + Documentation.htmlTable(headers, body)
   }
 
   /**
@@ -202,6 +245,7 @@ trait ToolCommand[Args] extends Logging {
 
     val config: String = {
       s"""title = "$toolName"
+         |urlToolName = "$urlToolName"
          |
           """.stripMargin + "\nnavigationOrder = [\n" +
         navigationOrder + "\n]"
