@@ -53,15 +53,4 @@ class AbstractOptParserTest extends BiopetTest {
     }
 
   }
-
-  @Test
-  def testGenerateReadme(): Unit = {
-    val outputFile = File.createTempFile("test.", ".md")
-    EmptyTool.generateReadme(outputFile)
-    outputFile should exist
-
-    outputFile.deleteOnExit()
-    EmptyTool.main(Array("--generateDocs", s"outputDir=${outputFile.getAbsolutePath},version=0.1,release=false"))
-    outputFile should exist
-  }
 }
