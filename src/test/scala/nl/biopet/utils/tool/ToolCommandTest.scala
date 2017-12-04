@@ -2,8 +2,10 @@ package nl.biopet.utils.tool
 
 import org.scalatest.Matchers
 import org.scalatest.testng.TestNGSuite
-import org.testng.annotations.Test
+import org.testng.annotations.{DataProvider, Test}
 import java.io.File
+import java.nio.file.Files
+
 import org.scalatest.Assertions
 
 import scala.io.Source
@@ -52,18 +54,24 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     TestTool.count shouldBe 11
   }
 
-  @Test
-  def testDocumentation(): Unit = {
-    val outputDir = new File("target/test/docs/")
+  @DataProvider(name = "release")
+  def releaseProvider: Array[Array[Any]] = {
+    Array(Array(false), Array(true))
+  }
+
+  @Test(dataProvider = "release")
+  def testDocumentation(release: Boolean): Unit = {
+    val outputDir = Files.createTempDirectory("test").toFile
     val version = "test_version"
-    val versionDir = new File(outputDir, version)
-    TestTool.generateDocumentation(outputDir, version, redirect = false)
+    val versionDir =
+      if (release) new File(outputDir, version)
+      else new File(outputDir, "develop")
+    TestTool.generateDocumentation(outputDir, version, release = release)
 
     new File(versionDir, "index.md") should exist
     new File(versionDir, "css/docs.css") should exist
     new File(versionDir, "directory.conf") should exist
     new File(versionDir, "default.template.html") should exist
-    new File(outputDir, "index.html") shouldNot exist
 
     val index = scala.io.Source.fromFile(versionDir + "/index.md")
     val lines = try index.mkString finally index.close()
@@ -93,12 +101,16 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     configLines should include("urlToolName = \"testtool\"")
     configLines should include("title = \"TestTool\"")
 
-    TestTool.generateDocumentation(outputDir, version, redirect = true)
-    new File(outputDir, "index.html") should exist
-    val redirector = Source.fromFile(new File(outputDir, "index.html")).mkString
-    redirector should include(s"""window.location.replace("./$version/index.html");""")
-    redirector should include(s"""<a href="./$version/index.html">Click here to go to TestTool documentation.""")
+    if (release) {
+      new File(outputDir, "index.html") should exist
+      val redirector = Source.fromFile(new File(outputDir, "index.html")).mkString
+      redirector should include(s"""window.location.replace("./$version/index.html");""")
+      redirector should include(s"""<a href="./$version/index.html">Click here to go to TestTool documentation.""")
+    } else {
+      new File(outputDir, "index.html") shouldNot exist
+    }
   }
+
   @Test
   def testReadme(): Unit = {
     val readmeFile = new File("target/test/readme/README.md")

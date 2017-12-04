@@ -224,9 +224,11 @@ trait ToolCommand[Args] extends Logging {
     */
   def generateDocumentation(outputDirectory: File,
                             version: String,
-                            redirect: Boolean = false): Unit = {
+                            release: Boolean = false): Unit = {
 
-    val versionDirectory = new File(outputDirectory, version)
+    val versionDirectory =
+      if (release) new File(outputDirectory, version)
+      else new File(outputDirectory, "develop")
     versionDirectory.mkdirs()
 
     val cssDirectory = new File(versionDirectory, "css")
@@ -253,12 +255,12 @@ trait ToolCommand[Args] extends Logging {
     configFile.write(config)
     configFile.close()
 
-    if (redirect) {
+    if (release) {
       Documentation.htmlRedirector(
         outputFile = new File(outputDirectory, "index.html"),
         link = s"./$version/index.html",
-        title = s"${toolName} Documentation",
-        redirectText = s"Click here to go to ${toolName} documentation."
+        title = s"$toolName Documentation",
+        redirectText = s"Click here to go to $toolName documentation."
       )
     }
   }
