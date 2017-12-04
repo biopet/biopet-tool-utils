@@ -1,13 +1,23 @@
 package nl.biopet.utils.tool
 
+import java.io.File
+
 import nl.biopet.utils.Logging
 import nl.biopet.utils
 
 /**
   * Abstract opt parser to add default args to each biopet tool
   */
-abstract class AbstractOptParser[T](cmdName: String)
-    extends scopt.OptionParser[T](cmdName) {
+abstract class AbstractOptParser[T](toolCommand: ToolCommand[T])
+    extends scopt.OptionParser[T](toolCommand.toolName) {
+  opt[File]("generateReadme") hidden() foreach { x =>
+    toolCommand.generateReadme(x)
+    sys.exit(0)
+  }
+  opt[Map[String, String]]("generateDocs") hidden() foreach { x =>
+    toolCommand.generateDocumentation(new File(x("outputDir")), x("version"), x("release").toLowerCase == "true")
+    sys.exit(0)
+  }
   head("General Biopet options")
   opt[String]('l', "log_level") foreach { x =>
     x.toLowerCase match {
@@ -29,5 +39,5 @@ abstract class AbstractOptParser[T](cmdName: String)
     System.err.println("Version: " + utils.Version)
     sys.exit(0)
   } text "Print version"
-  head(s"\n\nOptions for $cmdName\n")
+  head(s"\n\nOptions for ${toolCommand.toolName}\n")
 }

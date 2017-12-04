@@ -1,5 +1,7 @@
 package nl.biopet.utils.tool
 
+import java.io.File
+
 import nl.biopet.test.BiopetTest
 import org.apache.log4j.Level
 import org.testng.annotations.Test
@@ -18,7 +20,7 @@ class AbstractOptParserTest extends BiopetTest {
     }
 
     /** This is the parser object that will be tested. */
-    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs]("test") {
+    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs](this) {
     }
 
     /** Returns an empty/default args case class */
@@ -29,11 +31,10 @@ class AbstractOptParserTest extends BiopetTest {
   @Test
   def testParse(): Unit = {
     val args: Array[String] = Array()
-    case class Args()
-    class ArgsParser(cmdName: String) extends AbstractOptParser[Args](cmdName)
+    class ArgsParser(cmdName: String) extends AbstractOptParser[TestArgs](EmptyTool)
     val parser = new ArgsParser("name")
     val cmdArgs =
-      parser.parse(args, Args()).getOrElse(throw new IllegalArgumentException)
+      parser.parse(args, TestArgs()).getOrElse(throw new IllegalArgumentException)
   }
 
   @Test
@@ -51,5 +52,16 @@ class AbstractOptParserTest extends BiopetTest {
       EmptyTool.main(Array("--log_level", "whatever"))
     }
 
+  }
+
+  @Test
+  def testGenerateReadme(): Unit = {
+    val outputFile = File.createTempFile("test.", ".md")
+    EmptyTool.generateReadme(outputFile)
+    outputFile should exist
+
+    outputFile.deleteOnExit()
+    EmptyTool.main(Array("--generateDocs", s"outputDir=${outputFile.getAbsolutePath},version=0.1,release=false"))
+    outputFile should exist
   }
 }
