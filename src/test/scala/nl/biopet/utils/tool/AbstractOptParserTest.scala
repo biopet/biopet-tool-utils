@@ -1,5 +1,7 @@
 package nl.biopet.utils.tool
 
+import java.io.File
+
 import nl.biopet.test.BiopetTest
 import org.apache.log4j.Level
 import org.testng.annotations.Test
@@ -18,22 +20,20 @@ class AbstractOptParserTest extends BiopetTest {
     }
 
     /** This is the parser object that will be tested. */
-    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs]("test") {
+    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs](this) {
     }
 
     /** Returns an empty/default args case class */
     def emptyArgs: TestArgs = TestArgs()
-
-
   }
+
   @Test
   def testParse(): Unit = {
     val args: Array[String] = Array()
-    case class Args()
-    class ArgsParser(cmdName: String) extends AbstractOptParser[Args](cmdName)
+    class ArgsParser(cmdName: String) extends AbstractOptParser[TestArgs](EmptyTool)
     val parser = new ArgsParser("name")
     val cmdArgs =
-      parser.parse(args, Args()).getOrElse(throw new IllegalArgumentException)
+      parser.parse(args, TestArgs()).getOrElse(throw new IllegalArgumentException)
   }
 
   @Test

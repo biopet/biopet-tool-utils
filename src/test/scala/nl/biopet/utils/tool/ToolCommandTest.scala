@@ -30,7 +30,7 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     }
 
     /** This is the parser object that will be tested. */
-    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs]("test") {
+    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs](this) {
       opt[Int]('n', "num") action { (a, b) => b.copy(num = a) }
       opt[Unit]('x', "longX") required()
       opt[Unit]("power") unbounded() text "Palpatine's requested feature"
@@ -55,7 +55,7 @@ class ToolCommandTest extends TestNGSuite with Matchers {
   }
 
   @DataProvider(name = "release")
-  def releaseProvider: Array[Array[Any]] = {
+  def releaseProvider(): Array[Array[Any]] = {
     Array(Array(false), Array(true))
   }
 
