@@ -144,12 +144,12 @@ trait ToolCommand[Args] extends Logging {
   def example(args: String*): String = {
     cmdArrayToArgs(args.toArray)
 
-    exampleToMarkdown(args:_*)
+    exampleToMarkdown(args: _*)
   }
 
   /** Convert and *not* tests args */
   def unsafeExample(args: String*): String = {
-    exampleToMarkdown(args:_*)
+    exampleToMarkdown(args: _*)
   }
 
   /** Common function to convert to string */
@@ -160,8 +160,7 @@ trait ToolCommand[Args] extends Logging {
     for (argument <- argumentsList) {
       if (argument.startsWith("-")) {
         example.append(" \\\n    " + argument)
-      }
-      else {
+      } else {
         example.append(" " + argument)
       }
     }

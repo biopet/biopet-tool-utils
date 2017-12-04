@@ -25,9 +25,8 @@ class AbstractOptParserTest extends BiopetTest {
 
     /** Returns an empty/default args case class */
     def emptyArgs: TestArgs = TestArgs()
-
-
   }
+
   @Test
   def testParse(): Unit = {
     val args: Array[String] = Array()

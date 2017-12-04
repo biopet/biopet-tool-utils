@@ -10,12 +10,14 @@ import nl.biopet.utils
   */
 abstract class AbstractOptParser[T](toolCommand: ToolCommand[T])
     extends scopt.OptionParser[T](toolCommand.toolName) {
-  opt[File]("generateReadme") hidden() foreach { x =>
+  opt[File]("generateReadme") hidden () foreach { x =>
     toolCommand.generateReadme(x)
     sys.exit(0)
   }
-  opt[Map[String, String]]("generateDocs") hidden() foreach { x =>
-    toolCommand.generateDocumentation(new File(x("outputDir")), x("version"), x("release").toLowerCase == "true")
+  opt[Map[String, String]]("generateDocs") hidden () foreach { x =>
+    toolCommand.generateDocumentation(new File(x("outputDir")),
+                                      x("version"),
+                                      x("release").toLowerCase == "true")
     sys.exit(0)
   }
   head("General Biopet options")
