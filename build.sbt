@@ -20,11 +20,12 @@ publishMavenStyle := true
 scalaVersion := "2.11.11"
 
 resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers += Resolver.sonatypeRepo("releases")
 
-libraryDependencies += "com.github.biopet" %% "common-utils" % "0.2-SNAPSHOT" changing()
+libraryDependencies += "com.github.biopet" %% "common-utils" % "0.2"
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.0"
 
-libraryDependencies += "com.github.biopet" %% "test-utils" % "0.1" % Test
+libraryDependencies += "com.github.biopet" %% "test-utils" % "0.2" % Test
 
 useGpg := true
 
