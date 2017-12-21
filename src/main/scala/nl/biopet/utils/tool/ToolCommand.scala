@@ -110,7 +110,7 @@ trait ToolCommand[Args] extends Logging {
        |Download the latest version of $toolName [here](https://github.com/biopet/$urlToolName/releases/).
        |To generate the usage run:
        |
-       |    java -jar $toolName --version.jar --help
+       |    java -jar <${toolName}_jar> --help
        |
     """.stripMargin
 
