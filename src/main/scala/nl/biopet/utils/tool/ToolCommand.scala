@@ -85,7 +85,7 @@ trait ToolCommand[Args] extends Logging {
       |Each tool in the BIOPET tool suite is meant to offer a standalone function that can be used to perform a
       |dedicate data analysis task or added as part of [BIOPET pipelines](http://biopet-docs.readthedocs.io/en/latest/).
       |
-      |All tools in the BIOPET tool suite are [Free](https://www.gnu.org/philosophy/free-sw.html) and
+      |All tools in the BIOPET tool suite are [Free/Libre](https://www.gnu.org/philosophy/free-sw.html) and
       |[Open Source](https://opensource.org/osd) Software.
     """.stripMargin
 
@@ -110,7 +110,7 @@ trait ToolCommand[Args] extends Logging {
        |Download the latest version of $toolName [here](https://github.com/biopet/$urlToolName/releases/).
        |To generate the usage run:
        |
-       |    java -jar $toolName --version.jar --help
+       |    java -jar <${toolName}_jar> --help
        |
     """.stripMargin
 
