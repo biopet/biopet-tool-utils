@@ -95,6 +95,7 @@ class ToolCommandTest extends TestNGSuite with Matchers {
     lines should include(
       s"""Bug reports, feature requests and feedback can be submitted at our
         |[issue tracker](https://github.com/biopet/testtool/issues).""".stripMargin)
+    lines should include("java -jar <TestTool_jar>")
 
     val configFile = scala.io.Source.fromFile(versionDir + "/directory.conf")
     val configLines = try configFile.mkString finally configFile.close()
