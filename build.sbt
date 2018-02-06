@@ -1,5 +1,5 @@
 organization := "com.github.biopet"
-name := "ToolUtils"
+name := "tool-utils"
 
 biopetUrlName := "tool-utils"
 
@@ -9,7 +9,7 @@ developers += Developer(id="ffinfo", name="Peter van 't Hof", email="pjrvanthof@
 
 scalaVersion := "2.11.11"
 
-libraryDependencies += "com.github.biopet" %% "CommonUtils" % "0.3-SNAPSHOT" changing()
+libraryDependencies += "com.github.biopet" %% "common-utils" % "0.3-SNAPSHOT" changing()
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.0"
 
-libraryDependencies += "com.github.biopet" %% "TestUtils" % "0.3-SNAPSHOT" % Test changing()
+libraryDependencies += "com.github.biopet" %% "test-utils" % "0.3-SNAPSHOT" % Test changing()
