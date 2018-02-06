@@ -235,9 +235,9 @@ trait ToolCommand[Args] extends Logging {
     Documentation.contentsToMarkdown(mainPageContents,
                                      new File(versionDirectory, "index.md"))
     resourceToFile("/nl/biopet/utils/tool/default.template.html",
-                           new File(versionDirectory, "default.template.html"))
+                   new File(versionDirectory, "default.template.html"))
     resourceToFile("/nl/biopet/utils/tool/docs.css",
-                           new File(cssDirectory, "docs.css"))
+                   new File(cssDirectory, "docs.css"))
 
     val configFile = new PrintWriter(
       new File(versionDirectory, "/directory.conf"))
