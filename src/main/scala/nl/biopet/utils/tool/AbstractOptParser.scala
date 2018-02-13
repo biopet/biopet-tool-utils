@@ -24,14 +24,14 @@ abstract class AbstractOptParser[T](toolCommand: ToolCommand[T])
   opt[String]('l', "log_level") foreach { x =>
     x.toLowerCase match {
       case "debug" => Logging.logger.setLevel(org.apache.log4j.Level.DEBUG)
-      case "info" => Logging.logger.setLevel(org.apache.log4j.Level.INFO)
-      case "warn" => Logging.logger.setLevel(org.apache.log4j.Level.WARN)
+      case "info"  => Logging.logger.setLevel(org.apache.log4j.Level.INFO)
+      case "warn"  => Logging.logger.setLevel(org.apache.log4j.Level.WARN)
       case "error" => Logging.logger.setLevel(org.apache.log4j.Level.ERROR)
-      case _ =>
+      case _       =>
     }
   } text "Level of log information printed. Possible levels: 'debug', 'info', 'warn', 'error'" validate {
     case "debug" | "info" | "warn" | "error" => success
-    case _ => failure("Log level must be <debug/info/warn/error>")
+    case _                                   => failure("Log level must be <debug/info/warn/error>")
   }
   opt[Unit]('h', "help") foreach { _ =>
     System.err.println(this.usage)
