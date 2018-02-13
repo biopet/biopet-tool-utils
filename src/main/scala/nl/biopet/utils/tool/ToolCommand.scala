@@ -190,15 +190,15 @@ trait ToolCommand[Args] extends Logging {
           val description: String = option.desc
 
           val required: String = option.getMinOccurs match {
-            case 1 => "yes"
-            case 0 => "no"
+            case 1      => "yes"
+            case 0      => "no"
             case number => s"yes ($number required)"
           }
 
           val occurances: String = option.getMaxOccurs match {
-            case 1 => "no"
+            case 1            => "no"
             case Int.MaxValue => s"yes (unlimited)"
-            case number => s"yes ($number times)"
+            case number       => s"yes ($number times)"
           }
           val tableRow: List[String] =
             List(name, required, occurances, description)
