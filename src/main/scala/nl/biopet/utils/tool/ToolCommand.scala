@@ -169,7 +169,9 @@ trait ToolCommand[Args] extends Logging {
   private def exampleToMarkdown(spark: Boolean, args: String*): String = {
     val argumentsList = args.mkString(" ").split(" ")
     val example = new StringBuffer()
-    if (spark) example.append(s"\n\n    spark-submit <spark arguments> <${toolName}_jar>")
+    if (spark)
+      example.append(
+        s"\n\n    spark-submit <spark arguments> <${toolName}_jar>")
     else example.append(s"\n\n    java -jar <${toolName}_jar>")
     for (argument <- argumentsList) {
       if (argument.startsWith("-")) {

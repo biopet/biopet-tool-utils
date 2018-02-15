@@ -6,10 +6,12 @@ import org.testng.annotations.{DataProvider, Test}
 import java.io.File
 import java.nio.file.Files
 
+import nl.biopet.test.BiopetTest
 import org.scalatest.Assertions
 
 import scala.io.Source
-class ToolCommandTest extends TestNGSuite with Matchers {
+
+class ToolCommandTest extends BiopetTest {
 
   case class TestArgs(num: Int = 1)
 
@@ -40,8 +42,6 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
     /** Returns an empty/default args case class */
     def emptyArgs: TestArgs = TestArgs()
-
-
   }
 
   @Test
@@ -127,28 +127,41 @@ class ToolCommandTest extends TestNGSuite with Matchers {
 
   }
 
-  @Test
-  def testExample(): Unit = {
-    val example = TestTool.unsafeExample("-a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
-    example should include(
-      """    java -jar <TestTool_jar> \
-        |    -a 3 \
-        |    -b 2 bla 4 \
-        |    --bla \
+  @DataProvider(name = "spark")
+  def sparkProvider() = Array(Array(Boolean.box(false)), Array(Boolean.box(true)))
+
+  @Test(dataProvider = "spark")
+  def testExample(spark: Boolean): Unit = {
+    val prefix = if (spark) "spark-submit <spark arguments> <TestTool_jar>" else "java -jar <TestTool_jar>"
+
+    val args1 = Array("-a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+    val example1 = if (spark) TestTool.sparkUnsafeExample(args1:_*)
+    else TestTool.unsafeExample(args1:_*)
+    example1 should include(
+      s"""    $prefix \\
+        |    -a 3 \\
+        |    -b 2 bla 4 \\
+        |    --bla \\
         |    --config config.yaml config2.json""".stripMargin)
-    val example2 = TestTool.unsafeExample("this_file.txt -a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+
+    val args2 = Array("this_file.txt -a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+    val example2 = if (spark) TestTool.sparkUnsafeExample(args2:_*)
+    else TestTool.unsafeExample(args2:_*)
     example2 should include(
-      """    java -jar <TestTool_jar> this_file.txt \
-        |    -a 3 \
-        |    -b 2 bla 4 \
-        |    --bla \
+      s"""    $prefix this_file.txt \\
+        |    -a 3 \\
+        |    -b 2 bla 4 \\
+        |    --bla \\
         |    --config config.yaml config2.json""".stripMargin)
-    val safeExample = TestTool.example("--sith", "--sith", "-n", "11", "-x")
+
+    val safeArgs = Array("--sith", "--sith", "-n", "11", "-x")
+    val safeExample = if (spark) TestTool.sparkExample(safeArgs:_*)
+    else TestTool.example(safeArgs:_*)
     safeExample should include(
-      """    java -jar <TestTool_jar> \
-        |    --sith \
-        |    --sith \
-        |    -n 11 \
+      s"""    $prefix \\
+        |    --sith \\
+        |    --sith \\
+        |    -n 11 \\
         |    -x""".stripMargin)
 
     // Following should fail
