@@ -20,8 +20,8 @@ class AbstractOptParserTest extends BiopetTest {
     }
 
     /** This is the parser object that will be tested. */
-    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs](this) {
-    }
+    def argsParser: AbstractOptParser[TestArgs] =
+      new AbstractOptParser[TestArgs](this) {}
 
     /** Returns an empty/default args case class */
     def emptyArgs: TestArgs = TestArgs()
@@ -30,10 +30,13 @@ class AbstractOptParserTest extends BiopetTest {
   @Test
   def testParse(): Unit = {
     val args: Array[String] = Array()
-    class ArgsParser(cmdName: String) extends AbstractOptParser[TestArgs](EmptyTool)
+    class ArgsParser(cmdName: String)
+        extends AbstractOptParser[TestArgs](EmptyTool)
     val parser = new ArgsParser("name")
     val cmdArgs =
-      parser.parse(args, TestArgs()).getOrElse(throw new IllegalArgumentException)
+      parser
+        .parse(args, TestArgs())
+        .getOrElse(throw new IllegalArgumentException)
   }
 
   @Test
@@ -47,7 +50,7 @@ class AbstractOptParserTest extends BiopetTest {
     EmptyTool.logger.getLevel shouldBe Level.WARN
     EmptyTool.main(Array("--log_level", "error"))
     EmptyTool.logger.getLevel shouldBe Level.ERROR
-    a [java.lang.IllegalArgumentException] should be thrownBy {
+    a[java.lang.IllegalArgumentException] should be thrownBy {
       EmptyTool.main(Array("--log_level", "whatever"))
     }
 

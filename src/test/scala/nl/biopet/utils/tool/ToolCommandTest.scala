@@ -32,13 +32,16 @@ class ToolCommandTest extends BiopetTest {
     }
 
     /** This is the parser object that will be tested. */
-    def argsParser: AbstractOptParser[TestArgs] = new AbstractOptParser[TestArgs](this) {
-      opt[Int]('n', "num") action { (a, b) => b.copy(num = a) }
-      opt[Unit]('x', "longX") required()
-      opt[Unit]("power") unbounded() text "Palpatine's requested feature"
-      opt[Unit]("sith") minOccurs 2 maxOccurs 2 text "There are always 2"
-      opt[Unit]("hidden") hidden() text "Should not appear in usage!"
-    }
+    def argsParser: AbstractOptParser[TestArgs] =
+      new AbstractOptParser[TestArgs](this) {
+        opt[Int]('n', "num") action { (a, b) =>
+          b.copy(num = a)
+        }
+        opt[Unit]('x', "longX") required ()
+        opt[Unit]("power") unbounded () text "Palpatine's requested feature"
+        opt[Unit]("sith") minOccurs 2 maxOccurs 2 text "There are always 2"
+        opt[Unit]("hidden") hidden () text "Should not appear in usage!"
+      }
 
     /** Returns an empty/default args case class */
     def emptyArgs: TestArgs = TestArgs()
@@ -47,7 +50,7 @@ class ToolCommandTest extends BiopetTest {
   @Test
   def test(): Unit = {
     TestTool.count shouldBe 0
-    TestTool.main(Array("-x","--sith", "--sith"))
+    TestTool.main(Array("-x", "--sith", "--sith"))
     TestTool.toolName shouldBe "TestTool"
     TestTool.count shouldBe 1
     TestTool.main(Array("--sith", "--sith", "-n", "11", "-x"))
@@ -74,7 +77,8 @@ class ToolCommandTest extends BiopetTest {
     new File(versionDir, "default.template.html") should exist
 
     val index = scala.io.Source.fromFile(versionDir + "/index.md")
-    val lines = try index.mkString finally index.close()
+    val lines = try index.mkString
+    finally index.close()
     lines should include("--num")
     lines should include("For any question related to TestTool")
     lines should include("TestTool requires Java")
@@ -98,15 +102,19 @@ class ToolCommandTest extends BiopetTest {
     lines should include("java -jar <TestTool_jar>")
 
     val configFile = scala.io.Source.fromFile(versionDir + "/directory.conf")
-    val configLines = try configFile.mkString finally configFile.close()
+    val configLines = try configFile.mkString
+    finally configFile.close()
     configLines should include("urlToolName = \"testtool\"")
     configLines should include("title = \"TestTool\"")
 
     if (release) {
       new File(outputDir, "index.html") should exist
-      val redirector = Source.fromFile(new File(outputDir, "index.html")).mkString
-      redirector should include(s"""window.location.replace("./$version/index.html");""")
-      redirector should include(s"""<a href="./$version/index.html">Click here to go to TestTool documentation.""")
+      val redirector =
+        Source.fromFile(new File(outputDir, "index.html")).mkString
+      redirector should include(
+        s"""window.location.replace("./$version/index.html");""")
+      redirector should include(
+        s"""<a href="./$version/index.html">Click here to go to TestTool documentation.""")
     } else {
       new File(outputDir, "index.html") shouldNot exist
     }
@@ -117,7 +125,8 @@ class ToolCommandTest extends BiopetTest {
     val readmeFile = new File("target/test/readme/README.md")
     TestTool.generateReadme(readmeFile)
     val readme = scala.io.Source.fromFile(readmeFile)
-    val lines = try readme.mkString finally readme.close()
+    val lines = try readme.mkString
+    finally readme.close()
 
     lines should include("https://biopet.github.io/testtool")
     lines should include("# Documentation")
@@ -128,48 +137,53 @@ class ToolCommandTest extends BiopetTest {
   }
 
   @DataProvider(name = "spark")
-  def sparkProvider() = Array(Array(Boolean.box(false)), Array(Boolean.box(true)))
+  def sparkProvider() =
+    Array(Array(Boolean.box(false)), Array(Boolean.box(true)))
 
   @Test(dataProvider = "spark")
   def testExample(spark: Boolean): Unit = {
-    val prefix = if (spark) "spark-submit <spark arguments> <TestTool_jar>" else "java -jar <TestTool_jar>"
+    val prefix =
+      if (spark) "spark-submit <spark arguments> <TestTool_jar>"
+      else "java -jar <TestTool_jar>"
 
-    val args1 = Array("-a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
-    val example1 = if (spark) TestTool.sparkUnsafeExample(args1:_*)
-    else TestTool.unsafeExample(args1:_*)
-    example1 should include(
-      s"""    $prefix \\
+    val args1 =
+      Array("-a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
+    val example1 =
+      if (spark) TestTool.sparkUnsafeExample(args1: _*)
+      else TestTool.unsafeExample(args1: _*)
+    example1 should include(s"""    $prefix \\
         |    -a 3 \\
         |    -b 2 bla 4 \\
         |    --bla \\
         |    --config config.yaml config2.json""".stripMargin)
 
-    val args2 = Array("this_file.txt -a 3 -b 2", "bla 4", "--bla", "--config config.yaml config2.json")
-    val example2 = if (spark) TestTool.sparkUnsafeExample(args2:_*)
-    else TestTool.unsafeExample(args2:_*)
-    example2 should include(
-      s"""    $prefix this_file.txt \\
+    val args2 = Array("this_file.txt -a 3 -b 2",
+                      "bla 4",
+                      "--bla",
+                      "--config config.yaml config2.json")
+    val example2 =
+      if (spark) TestTool.sparkUnsafeExample(args2: _*)
+      else TestTool.unsafeExample(args2: _*)
+    example2 should include(s"""    $prefix this_file.txt \\
         |    -a 3 \\
         |    -b 2 bla 4 \\
         |    --bla \\
         |    --config config.yaml config2.json""".stripMargin)
 
     val safeArgs = Array("--sith", "--sith", "-n", "11", "-x")
-    val safeExample = if (spark) TestTool.sparkExample(safeArgs:_*)
-    else TestTool.example(safeArgs:_*)
-    safeExample should include(
-      s"""    $prefix \\
+    val safeExample =
+      if (spark) TestTool.sparkExample(safeArgs: _*)
+      else TestTool.example(safeArgs: _*)
+    safeExample should include(s"""    $prefix \\
         |    --sith \\
         |    --sith \\
         |    -n 11 \\
         |    -x""".stripMargin)
 
     // Following should fail
-     intercept[IllegalArgumentException] {
-      TestTool.example("--sith", "--sith","--sith", "-n", "11", "-x")
+    intercept[IllegalArgumentException] {
+      TestTool.example("--sith", "--sith", "--sith", "-n", "11", "-x")
     }
   }
 
 }
-
-
