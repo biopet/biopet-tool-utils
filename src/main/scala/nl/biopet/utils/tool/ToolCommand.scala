@@ -145,19 +145,32 @@ trait ToolCommand[Args] extends Logging {
   def example(args: String*): String = {
     cmdArrayToArgs(args.toArray)
 
-    exampleToMarkdown(args: _*)
+    exampleToMarkdown(false, args: _*)
   }
 
   /** Convert and *not* tests args */
   def unsafeExample(args: String*): String = {
-    exampleToMarkdown(args: _*)
+    exampleToMarkdown(false, args: _*)
+  }
+
+  /** Convert and tests args */
+  def sparkExample(args: String*): String = {
+    cmdArrayToArgs(args.toArray)
+
+    exampleToMarkdown(true, args: _*)
+  }
+
+  /** Convert and *not* tests args */
+  def sparkUnsafeExample(args: String*): String = {
+    exampleToMarkdown(true, args: _*)
   }
 
   /** Common function to convert to string */
-  private def exampleToMarkdown(args: String*): String = {
+  private def exampleToMarkdown(spark: Boolean, args: String*): String = {
     val argumentsList = args.mkString(" ").split(" ")
     val example = new StringBuffer()
-    example.append(s"\n\n    java -jar <${toolName}_jar>")
+    if (spark) example.append(s"\n\n    spark-submit <spark arguments> <${toolName}_jar>")
+    else example.append(s"\n\n    java -jar <${toolName}_jar>")
     for (argument <- argumentsList) {
       if (argument.startsWith("-")) {
         example.append(" \\\n    " + argument)
