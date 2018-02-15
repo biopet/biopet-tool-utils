@@ -145,24 +145,24 @@ trait ToolCommand[Args] extends Logging {
   def example(args: String*): String = {
     cmdArrayToArgs(args.toArray)
 
-    exampleToMarkdown(false, args: _*)
+    exampleToMarkdown(spark = false, args: _*)
   }
 
   /** Convert and *not* tests args */
   def unsafeExample(args: String*): String = {
-    exampleToMarkdown(false, args: _*)
+    exampleToMarkdown(spark = false, args: _*)
   }
 
   /** Convert and tests args */
   def sparkExample(args: String*): String = {
     cmdArrayToArgs(args.toArray)
 
-    exampleToMarkdown(true, args: _*)
+    exampleToMarkdown(spark = true, args: _*)
   }
 
   /** Convert and *not* tests args */
   def sparkUnsafeExample(args: String*): String = {
-    exampleToMarkdown(true, args: _*)
+    exampleToMarkdown(spark = true, args: _*)
   }
 
   /** Common function to convert to string */
