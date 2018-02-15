@@ -1,17 +1,24 @@
-/**
-  * Biopet is built on top of GATK Queue for building bioinformatic
-  * pipelines. It is mainly intended to support LUMC SHARK cluster which is running
-  * SGE. But other types of HPC that are supported by GATK Queue (such as PBS)
-  * should also be able to execute Biopet tools and pipelines.
-  *
-  * Copyright 2014 Sequencing Analysis Support Core - Leiden University Medical Center
-  *
-  * Contact us at: sasc@lumc.nl
-  *
-  * A dual licensing mode is applied. The source code within this project is freely available for non-commercial use under an AGPL
-  * license; For commercial users or users who do not want to follow the AGPL
-  * license, please contact us to obtain a separate license.
-  */
+/*
+ * Copyright (c) 2014 Biopet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package nl.biopet.utils.tool
 
 import java.io.{File, PrintWriter}
@@ -145,19 +152,34 @@ trait ToolCommand[Args] extends Logging {
   def example(args: String*): String = {
     cmdArrayToArgs(args.toArray)
 
-    exampleToMarkdown(args: _*)
+    exampleToMarkdown(spark = false, args: _*)
   }
 
   /** Convert and *not* tests args */
   def unsafeExample(args: String*): String = {
-    exampleToMarkdown(args: _*)
+    exampleToMarkdown(spark = false, args: _*)
+  }
+
+  /** Convert and tests args */
+  def sparkExample(args: String*): String = {
+    cmdArrayToArgs(args.toArray)
+
+    exampleToMarkdown(spark = true, args: _*)
+  }
+
+  /** Convert and *not* tests args */
+  def sparkUnsafeExample(args: String*): String = {
+    exampleToMarkdown(spark = true, args: _*)
   }
 
   /** Common function to convert to string */
-  private def exampleToMarkdown(args: String*): String = {
+  private def exampleToMarkdown(spark: Boolean, args: String*): String = {
     val argumentsList = args.mkString(" ").split(" ")
     val example = new StringBuffer()
-    example.append(s"\n\n    java -jar <${toolName}_jar>")
+    if (spark)
+      example.append(
+        s"\n\n    spark-submit <spark arguments> <${toolName}_jar>")
+    else example.append(s"\n\n    java -jar <${toolName}_jar>")
     for (argument <- argumentsList) {
       if (argument.startsWith("-")) {
         example.append(" \\\n    " + argument)
