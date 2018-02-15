@@ -4,6 +4,8 @@ name := "tool-utils"
 
 biopetUrlName := "tool-utils"
 
+startYear := Some(2017)
+
 biopetIsTool := false
 
 developers += Developer(id = "ffinfo",
