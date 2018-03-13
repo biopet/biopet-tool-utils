@@ -26,10 +26,10 @@ import nl.biopet.utils.tool.{AbstractOptParser, ToolCommand}
 class ArgsParser(toolCommand: MultiToolCommand)
     extends AbstractOptParser[Args](toolCommand) {
 
-  arg[String]("mode")
-    .valueName("<mode>")
+  arg[String]("toolName")
+    .valueName("<toolName>")
     .action((x, c) => c.copy(toolName = Some(x)))
-    .text("compute or gather")
+    .text("Name of the tool to execute")
   arg[String]("tool args")
     .optional()
     .unbounded()

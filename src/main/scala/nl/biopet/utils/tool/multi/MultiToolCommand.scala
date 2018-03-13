@@ -7,11 +7,9 @@ trait MultiToolCommand extends ToolCommand[Args] {
   def argsParser = new ArgsParser(this)
 
   def main(args: Array[String]): Unit = {
-    val cmdArgs = cmdArrayToArgs(args)
-
-    cmdArgs.toolName.map(_.toLowerCase) match {
+    args.headOption match {
       case Some(name) =>
-        singleTool(name).main(cmdArgs.toolArgs)
+        singleTool(name).main(args.tail)
       case _ =>
         printToolList()
         throw new IllegalArgumentException(s"Please supply a tool name")
@@ -19,9 +17,9 @@ trait MultiToolCommand extends ToolCommand[Args] {
   }
 
   def singleTool(name: String): ToolCommand[_] = {
-    allTools.find(_.toolName.toLowerCase == name).getOrElse{
+    allTools.find(_.toolName.toLowerCase == name).getOrElse {
       printToolList()
-      throw new IllegalArgumentException(s"Tool '$toolName' not found")
+      throw new IllegalArgumentException(s"Tool '$name' not found")
     }
   }
 
@@ -47,23 +45,19 @@ trait MultiToolCommand extends ToolCommand[Args] {
   def subTools: Map[String, List[ToolCommand[_]]]
 
   private def validateArgs(args: String*): Unit = {
-    val cmdArgs = cmdArrayToArgs(args.toArray)
-
-    cmdArgs.toolName match {
-      case Some(toolName) =>
-        val tool = singleTool(toolName)
-        tool.cmdArrayToArgs(args.tail.toArray)
-      case _ =>
+    args.headOption match {
+      case Some(name) => singleTool(name).cmdArrayToArgs(args.tail.toArray)
+      case _          =>
     }
   }
 
   override def sparkExample(args: String*): String = {
-    validateArgs(args:_*)
+    validateArgs(args: _*)
     exampleToMarkdown(spark = true, args: _*)
   }
 
   override def example(args: String*): String = {
-    validateArgs(args:_*)
+    validateArgs(args: _*)
     exampleToMarkdown(spark = false, args: _*)
   }
 }
