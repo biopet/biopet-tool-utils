@@ -173,7 +173,7 @@ trait ToolCommand[Args] extends Logging {
   }
 
   /** Common function to convert to string */
-  private def exampleToMarkdown(spark: Boolean, args: String*): String = {
+  private[tool] def exampleToMarkdown(spark: Boolean, args: String*): String = {
     val argumentsList = args.mkString(" ").split(" ")
     val example = new StringBuffer()
     if (spark)
