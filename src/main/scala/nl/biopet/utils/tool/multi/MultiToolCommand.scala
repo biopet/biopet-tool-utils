@@ -101,4 +101,52 @@ trait MultiToolCommand extends ToolCommand[Args] {
           .mkString("\n\n")
     } else super.usageText
   }
+
+  def extendedDescriptionText: String = {
+    subTools
+      .map {
+        case (group, tools) =>
+          tools
+            .map { tool =>
+              s"""
+          |#### $group - ${tool.toolName}
+          |${tool.descriptionText}
+        """.stripMargin
+            }
+            .mkString("\n")
+      }
+      .mkString("\n")
+  }
+
+  def extendedManualText: String = {
+    subTools
+      .map {
+        case (group, tools) =>
+          tools
+            .map { tool =>
+              s"""
+           |#### $group - ${tool.toolName}
+           |${tool.manualText}
+        """.stripMargin
+            }
+            .mkString("\n")
+      }
+      .mkString("\n")
+  }
+
+  def extendedExampleText: String = {
+    subTools
+      .map {
+        case (group, tools) =>
+          tools
+            .map { tool =>
+              s"""
+           |#### $group - ${tool.toolName}
+           |${tool.exampleText}
+        """.stripMargin
+            }
+            .mkString("\n")
+      }
+      .mkString("\n")
+  }
 }
