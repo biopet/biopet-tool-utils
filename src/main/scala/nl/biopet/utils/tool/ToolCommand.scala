@@ -148,9 +148,13 @@ trait ToolCommand[Args] extends Logging {
 
   // DOCUMENTATION METHODS
 
+  def validateArgs(args: String*): Unit = {
+    cmdArrayToArgs(args.toArray)
+  }
+
   /** Convert and tests args */
   def example(args: String*): String = {
-    cmdArrayToArgs(args.toArray)
+    validateArgs(args: _*)
 
     exampleToMarkdown(spark = false, args: _*)
   }
@@ -162,7 +166,7 @@ trait ToolCommand[Args] extends Logging {
 
   /** Convert and tests args */
   def sparkExample(args: String*): String = {
-    cmdArrayToArgs(args.toArray)
+    validateArgs(args: _*)
 
     exampleToMarkdown(spark = true, args: _*)
   }

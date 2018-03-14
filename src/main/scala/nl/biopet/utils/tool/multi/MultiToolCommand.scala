@@ -39,7 +39,7 @@ trait MultiToolCommand extends ToolCommand[Args] {
   }
 
   def singleTool(name: String): ToolCommand[_] = {
-    allTools.find(_.toolName.toLowerCase == name).getOrElse {
+    allTools.find(_.toolName.toLowerCase == name.toLowerCase).getOrElse {
       printToolList()
       throw new IllegalArgumentException(s"Tool '$name' not found")
     }
@@ -66,21 +66,11 @@ trait MultiToolCommand extends ToolCommand[Args] {
 
   def subTools: Map[String, List[ToolCommand[_]]]
 
-  private def validateArgs(args: String*): Unit = {
+  override def validateArgs(args: String*): Unit = {
     args.headOption match {
       case Some(name) => singleTool(name).cmdArrayToArgs(args.tail.toArray)
       case _          =>
     }
-  }
-
-  override def sparkExample(args: String*): String = {
-    validateArgs(args: _*)
-    exampleToMarkdown(spark = true, args: _*)
-  }
-
-  override def example(args: String*): String = {
-    validateArgs(args: _*)
-    exampleToMarkdown(spark = false, args: _*)
   }
 
   def extendedUsage = false
