@@ -82,4 +82,23 @@ trait MultiToolCommand extends ToolCommand[Args] {
     validateArgs(args: _*)
     exampleToMarkdown(spark = false, args: _*)
   }
+
+  def extendedUsage = false
+
+  override def usageText: String = {
+    if (extendedUsage) {
+      super.usageText +
+        subTools
+          .map {
+            case (group, tools) =>
+              tools
+                .map { tool =>
+                  s"### Usage for $group - ${tool.toolName}:\n\n" +
+                    tool.usageHtmlTable
+                }
+                .mkString("\n\n")
+          }
+          .mkString("\n\n")
+    } else super.usageText
+  }
 }

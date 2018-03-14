@@ -191,45 +191,50 @@ trait ToolCommand[Args] extends Logging {
     example.toString
   }
 
+  protected def usageHeaders: List[String] =
+    List("Option", "Required", "Can occur multiple times", "Description")
+
+  protected def usageRows(
+      parser: scopt.OptionParser[Args]): List[List[String]] = {
+    val body = new ListBuffer[List[String]]
+
+    for (option <- parser.optionsForRender) {
+      // Do not show usage if option is hidden.
+      if (!option.isHidden) {
+        val shortOpt: String =
+          if (option.shortOpt.isDefined) "-" + option.shortOpt.get else ""
+        val optSeperator: String =
+          if (option.shortOpt.isDefined) ", " else ""
+        val name: String = option.fullName + optSeperator + shortOpt
+        val description: String = option.desc
+
+        val required: String = option.getMinOccurs match {
+          case 1      => "yes"
+          case 0      => "no"
+          case number => s"yes ($number required)"
+        }
+
+        val occurances: String = option.getMaxOccurs match {
+          case 1            => "no"
+          case Int.MaxValue => s"yes (unlimited)"
+          case number       => s"yes ($number times)"
+        }
+        val tableRow: List[String] =
+          List(name, required, occurances, description)
+        body.append(tableRow)
+      }
+    }
+    body.toList
+  }
+
+  def usageHtmlTable: String =
+    Documentation.htmlTable(usageHeaders, usageRows(argsParser))
+
   /** Creates a html formatted usage string */
   def usageText: String = {
 
     // Generate usage table by defining body and headers.
-    val headers: List[String] =
-      List("Option", "Required", "Can occur multiple times", "Description")
-
-    def body: List[List[String]] = {
-      val body = new ListBuffer[List[String]]
-
-      for (option <- argsParser.optionsForRender) {
-        // Do not show usage if option is hidden.
-        if (!option.isHidden) {
-          val shortOpt: String =
-            if (option.shortOpt.isDefined) "-" + option.shortOpt.get else ""
-          val optSeperator: String =
-            if (option.shortOpt.isDefined) ", " else ""
-          val name: String = option.fullName + optSeperator + shortOpt
-          val description: String = option.desc
-
-          val required: String = option.getMinOccurs match {
-            case 1      => "yes"
-            case 0      => "no"
-            case number => s"yes ($number required)"
-          }
-
-          val occurances: String = option.getMaxOccurs match {
-            case 1            => "no"
-            case Int.MaxValue => s"yes (unlimited)"
-            case number       => s"yes ($number times)"
-          }
-          val tableRow: List[String] =
-            List(name, required, occurances, description)
-          body.append(tableRow)
-        }
-      }
-      body.toList
-    }
-    s"Usage for $toolName:\n\n" + Documentation.htmlTable(headers, body)
+    s"Usage for $toolName:\n\n$usageHtmlTable"
   }
 
   /**
