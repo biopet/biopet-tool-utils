@@ -28,10 +28,9 @@ trait MultiToolCommand extends ToolCommand[Args] {
   def argsParser = new ArgsParser(this)
 
   def main(args: Array[String]): Unit = {
-    val cmdArg = cmdArrayToArgs(args)
-    cmdArg.toolName match {
+    args.headOption match {
       case Some(name) =>
-        singleTool(name).main(cmdArg.toolArgs)
+        singleTool(name).main(args.tail)
       case _ =>
         printToolList()
         throw new IllegalArgumentException(s"Please supply a tool name")
