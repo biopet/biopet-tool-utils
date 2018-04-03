@@ -20,4 +20,4 @@ scalaVersion := "2.11.12"
 libraryDependencies += "com.github.biopet" %% "common-utils" % "0.4-SNAPSHOT" changing ()
 libraryDependencies += "com.github.scopt" %% "scopt" % "3.7.0"
 
-libraryDependencies += "com.github.biopet" %% "test-utils" % "0.3" % Test
+libraryDependencies += "com.github.biopet" %% "test-utils" % "0.4-SNAPSHOT" % Test changing ()
