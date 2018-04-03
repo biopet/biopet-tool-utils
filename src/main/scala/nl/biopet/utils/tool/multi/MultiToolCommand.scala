@@ -28,7 +28,8 @@ trait MultiToolCommand extends ToolCommand[Args] {
   def argsParser = new ArgsParser(this)
 
   def main(args: Array[String]): Unit = {
-    args.headOption match {
+    val cmdArgs = cmdArrayToArgs(args)
+    cmdArgs.toolName match {
       case Some(name) =>
         singleTool(name).main(args.tail)
       case _ =>
