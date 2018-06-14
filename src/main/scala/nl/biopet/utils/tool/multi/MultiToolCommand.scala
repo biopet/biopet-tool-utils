@@ -33,6 +33,8 @@ trait MultiToolCommand extends ToolCommand[Args] {
         cmdArrayToArgs(args)
       case Some("--generateDocs") =>
         cmdArrayToArgs(args)
+      case Some("-h") | Some("--help") =>
+        cmdArrayToArgs(args)
       case Some(name) =>
         singleTool(name).main(args.tail)
       case _ =>
