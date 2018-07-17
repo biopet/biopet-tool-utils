@@ -94,6 +94,7 @@ class ToolCommandTest extends BiopetTest {
 
     new File(versionDir, "index.md") should exist
     new File(versionDir, "css/docs.css") should exist
+    new File(versionDir, "images/biopet-logo.png") should exist
     new File(versionDir, "directory.conf") should exist
     new File(versionDir, "default.template.html") should exist
 
