@@ -263,12 +263,15 @@ trait ToolCommand[Args] extends Logging {
     versionDirectory.mkdirs()
 
     val cssDirectory = new File(versionDirectory, "css")
+    val imagesDirectory = new File(versionDirectory, "images")
     Documentation.contentsToMarkdown(mainPageContents,
                                      new File(versionDirectory, "index.md"))
     resourceToFile("/nl/biopet/utils/tool/default.template.html",
                    new File(versionDirectory, "default.template.html"))
     resourceToFile("/nl/biopet/utils/tool/docs.css",
                    new File(cssDirectory, "docs.css"))
+    resourceToFile("/nl/biopet/utils/tool/biopet_logo_1_20x23.png",
+                   new File(imagesDirectory, "biopet-logo.png"))
 
     val configFile = new PrintWriter(
       new File(versionDirectory, "/directory.conf"))
